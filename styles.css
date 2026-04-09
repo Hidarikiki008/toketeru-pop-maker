@@ -774,6 +774,7 @@ button:focus {
 .pop-kicker,
 .pop-title,
 .pop-comment,
+.pop-description,
 .pop-price,
 .pop-empty {
   margin: 0;
@@ -784,10 +785,15 @@ button:focus {
 
 .emoji-inline {
   display: inline-block;
-  margin-left: 0.03em;
-  font-size: 1.12em;
+  margin-left: 0.05em;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-size: 1.34em;
   line-height: 1;
-  vertical-align: -0.08em;
+  -webkit-transform: scale(1.08);
+  transform: scale(1.08);
+  -webkit-transform-origin: center 68%;
+  transform-origin: center 68%;
+  vertical-align: -0.14em;
 }
 
 .pop-kicker {
@@ -807,6 +813,12 @@ button:focus {
   margin-top: 14px;
   font-size: 28px;
   line-height: 1.35;
+}
+
+.pop-description {
+  margin-top: 10px;
+  font-size: 20px;
+  line-height: 1.45;
 }
 
 .pop-foot {
@@ -842,6 +854,10 @@ button:focus {
 
 .surface-print .pop-comment {
   font-size: 24px;
+}
+
+.surface-print .pop-description {
+  font-size: 18px;
 }
 
 .surface-print .pop-price {
@@ -936,6 +952,30 @@ button:focus {
   font-size: 20px;
 }
 
+.size-description-compact {
+  font-size: 18px;
+}
+
+.surface-full .size-description-compact {
+  font-size: 24px;
+}
+
+.surface-print .size-description-compact {
+  font-size: 16px;
+}
+
+.size-description-tight {
+  font-size: 16px;
+}
+
+.surface-full .size-description-tight {
+  font-size: 20px;
+}
+
+.surface-print .size-description-tight {
+  font-size: 14px;
+}
+
 .template-a .pop-kicker {
   color: #7a5d64;
 }
@@ -954,6 +994,13 @@ button:focus {
   margin-right: auto;
   margin-left: auto;
   line-height: 1.18;
+}
+
+.template-a .pop-description {
+  max-width: 78%;
+  margin-right: auto;
+  margin-left: auto;
+  color: rgba(78, 72, 70, 0.88);
 }
 
 .template-a .pop-foot {
@@ -995,6 +1042,14 @@ button:focus {
   line-height: 1.12;
 }
 
+.template-b .pop-description {
+  max-width: 82%;
+  margin-right: auto;
+  margin-left: auto;
+  color: rgba(78, 72, 70, 0.88);
+  line-height: 1.3;
+}
+
 .template-b .pop-foot {
   width: 100%;
   margin-top: 24px;
@@ -1009,26 +1064,36 @@ button:focus {
 }
 
 .template-c .pop-top {
-  min-height: 68px;
+  min-height: 86px;
+  text-align: center;
 }
 
 .template-c .pop-copy {
-  padding-top: 0;
+  padding-top: 8px;
+  text-align: center;
 }
 
 .template-c .pop-title {
-  display: inline-block;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  line-height: 1.15;
+  display: block;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  line-height: 1.05;
 }
 
 .template-c .pop-comment {
-  max-width: 78%;
+  max-width: 88%;
   margin-right: auto;
   margin-left: auto;
-  line-height: 1.14;
+  line-height: 1.08;
+}
+
+.template-c .pop-description {
+  max-width: 82%;
+  margin-right: auto;
+  margin-left: auto;
+  color: rgba(78, 72, 70, 0.92);
+  line-height: 1.2;
 }
 
 .template-c .pop-foot {
@@ -1036,9 +1101,16 @@ button:focus {
 }
 
 .template-c .pop-ribbon {
-  border-radius: 20px;
-  -webkit-transform: rotate(5deg);
-  transform: rotate(5deg);
+  position: static;
+  display: inline-block;
+  margin: 0 auto;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12px 22px rgba(120, 104, 95, 0.14);
+  letter-spacing: 0.08em;
+  -webkit-transform: none;
+  transform: none;
 }
 
 .template-c .pop-price {

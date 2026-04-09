@@ -9,14 +9,16 @@ var ROLE_MAP = {
     tipText: "見出しを主役にして、価格は小さめにすると強いよ。",
     titleLabel: "目立たせる言葉",
     commentLabel: "商品名",
+    descriptionLabel: "ひとこと説明",
     priceLabel: "価格",
     titlePlaceholder: "例：春のおすすめ",
     commentPlaceholder: "例：手作りクッキー",
+    descriptionPlaceholder: "例：サクサクこうばしい人気味",
     pricePlaceholder: "例：300円",
     presets: [
-      { title: "おすすめ", comment: "手作りクッキー", price: "300円" },
-      { title: "新作", comment: "春のマドレーヌ", price: "280円" },
-      { title: "春限定", comment: "さくらパウンド", price: "350円" }
+      { title: "おすすめ", comment: "手作りクッキー", description: "サクサクこうばしい人気味", price: "300円" },
+      { title: "新作", comment: "春のマドレーヌ", description: "ふわっとやさしい春の香り", price: "280円" },
+      { title: "春限定", comment: "さくらパウンド", description: "今だけのやわらかい味わい", price: "350円" }
     ]
   },
   beside: {
@@ -28,14 +30,16 @@ var ROLE_MAP = {
     tipText: "商品名と価格を近くに置くと選びやすいよ。",
     titleLabel: "選ぶ理由",
     commentLabel: "商品名",
+    descriptionLabel: "ひとこと説明",
     priceLabel: "価格",
     titlePlaceholder: "例：やさしい甘さ",
     commentPlaceholder: "例：手作りクッキー",
+    descriptionPlaceholder: "例：サクサク、やさしい甘さ",
     pricePlaceholder: "例：300円",
     presets: [
-      { title: "人気商品", comment: "手作りクッキー", price: "300円" },
-      { title: "手作りです", comment: "バタークッキー", price: "320円" },
-      { title: "売れています", comment: "しっとりマフィン", price: "280円" }
+      { title: "人気商品", comment: "手作りクッキー", description: "サクサク、やさしい甘さ", price: "300円" },
+      { title: "手作りです", comment: "バタークッキー", description: "バターの香りがふわっと広がるよ", price: "320円" },
+      { title: "売れています", comment: "しっとりマフィン", description: "ふんわり食べやすい人気味だよ", price: "280円" }
     ]
   },
   sale: {
@@ -47,14 +51,16 @@ var ROLE_MAP = {
     tipText: "価格か限定感を主役にすると目に入りやすいよ。",
     titleLabel: "見せたい言葉",
     commentLabel: "商品名",
+    descriptionLabel: "ひとこと説明",
     priceLabel: "価格",
     titlePlaceholder: "例：数量限定",
     commentPlaceholder: "例：手作りクッキー",
+    descriptionPlaceholder: "例：今だけのサクサク人気味",
     pricePlaceholder: "例：2つで500円",
     presets: [
-      { title: "SALE", comment: "手作りクッキー", price: "2つで500円" },
-      { title: "数量限定", comment: "さくらパウンド", price: "350円" },
-      { title: "お買い得", comment: "しっとりマフィン", price: "280円" }
+      { title: "SALE", comment: "手作りクッキー", description: "今だけのサクサク人気味", price: "2つで500円" },
+      { title: "数量限定", comment: "さくらパウンド", description: "春だけのふんわり味わい", price: "350円" },
+      { title: "お買い得", comment: "しっとりマフィン", description: "今日いちばんのお買い得だよ", price: "280円" }
     ]
   }
 };
@@ -70,6 +76,7 @@ var COLOR_HINT_MAP = {
 var DEFAULT_FORM = {
   title: "人気商品",
   comment: "手作りクッキー",
+  description: "サクサクこうばしい人気味",
   price: "300円",
   role: "beside",
   color: "orange",
@@ -84,6 +91,7 @@ var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
 var form = document.getElementById("popForm");
 var titleInput = document.getElementById("titleInput");
 var commentInput = document.getElementById("commentInput");
+var descriptionInput = document.getElementById("descriptionInput");
 var priceInput = document.getElementById("priceInput");
 var colorSelect = document.getElementById("colorSelect");
 var colorGrid = document.getElementById("colorGrid");
@@ -98,6 +106,7 @@ var orientationButtons = document.querySelectorAll("[data-orientation]");
 var previewButtons = document.querySelectorAll("[data-preview]");
 var titleLabel = document.getElementById("titleLabel");
 var commentLabel = document.getElementById("commentLabel");
+var descriptionLabel = document.getElementById("descriptionLabel");
 var priceLabel = document.getElementById("priceLabel");
 var presetRow = document.getElementById("presetRow");
 var guideTitle = document.getElementById("guideTitle");
@@ -178,6 +187,7 @@ function findTargetWithAttribute(startNode, attributeName, stopNode) {
 function setDefaults() {
   titleInput.value = DEFAULT_FORM.title;
   commentInput.value = DEFAULT_FORM.comment;
+  descriptionInput.value = DEFAULT_FORM.description;
   priceInput.value = DEFAULT_FORM.price;
   setColor(DEFAULT_FORM.color);
   copiesSelect.value = DEFAULT_FORM.copies;
@@ -214,9 +224,11 @@ function syncRoleGuide() {
 
   titleLabel.textContent = role.titleLabel;
   commentLabel.textContent = role.commentLabel;
+  descriptionLabel.textContent = role.descriptionLabel;
   priceLabel.textContent = role.priceLabel;
   titleInput.setAttribute("placeholder", role.titlePlaceholder);
   commentInput.setAttribute("placeholder", role.commentPlaceholder);
+  descriptionInput.setAttribute("placeholder", role.descriptionPlaceholder);
   priceInput.setAttribute("placeholder", role.pricePlaceholder);
   guideTitle.textContent = role.guideTitle;
   guidePlacement.textContent = role.guidePlacement;
@@ -256,6 +268,7 @@ function applyPreset(index) {
 
   titleInput.value = preset.title || "";
   commentInput.value = preset.comment || "";
+  descriptionInput.value = preset.description || "";
 
   if (preset.price) {
     priceInput.value = preset.price;
@@ -349,6 +362,7 @@ function getFormData() {
   return {
     title: titleInput.value,
     comment: commentInput.value,
+    description: descriptionInput.value,
     price: priceInput.value,
     role: roleName,
     template: role.template,
@@ -439,25 +453,28 @@ function detectTemplateName(surface) {
 function getTemplateScalePreset(templateName) {
   if (templateName === "template-c") {
     return {
-      title: 36,
-      comment: 30,
-      price: 98,
-      top: 78,
-      priceWidth: 250,
-      priceMinWidth: 140,
-      priceVerticalPad: 16,
-      priceHorizontalPad: 28,
-      commentMargin: 20,
-      ribbonFont: 34,
-      ribbonVerticalPad: 10,
-      ribbonHorizontalPad: 22
+      title: 54,
+      comment: 56,
+      description: 30,
+      price: 108,
+      top: 98,
+      priceWidth: 270,
+      priceMinWidth: 150,
+      priceVerticalPad: 18,
+      priceHorizontalPad: 30,
+      commentMargin: 18,
+      descriptionMargin: 14,
+      ribbonFont: 52,
+      ribbonVerticalPad: 12,
+      ribbonHorizontalPad: 28
     };
   }
 
   if (templateName === "template-b") {
     return {
       title: 30,
-      comment: 52,
+      comment: 64,
+      description: 28,
       price: 42,
       top: 44,
       priceWidth: 120,
@@ -465,6 +482,7 @@ function getTemplateScalePreset(templateName) {
       priceVerticalPad: 12,
       priceHorizontalPad: 24,
       commentMargin: 20,
+      descriptionMargin: 14,
       ribbonFont: 24,
       ribbonVerticalPad: 8,
       ribbonHorizontalPad: 16
@@ -473,7 +491,8 @@ function getTemplateScalePreset(templateName) {
 
   return {
     title: 100,
-    comment: 38,
+    comment: 48,
+    description: 24,
     price: 34,
     top: 28,
     priceWidth: 120,
@@ -481,6 +500,7 @@ function getTemplateScalePreset(templateName) {
     priceVerticalPad: 10,
     priceHorizontalPad: 20,
     commentMargin: 24,
+    descriptionMargin: 16,
     ribbonFont: 24,
     ribbonVerticalPad: 8,
     ribbonHorizontalPad: 16
@@ -497,8 +517,9 @@ function buildPopSurface(data, variant, isEmptySlot) {
   var foot = createElement("div", "pop-foot");
   var title = trimText(data.title);
   var comment = trimText(data.comment);
+  var description = trimText(data.description);
   var price = trimText(data.price);
-  var hasAnyText = !!(title || comment || price);
+  var hasAnyText = !!(title || comment || description || price);
   var ribbon;
 
   outer.className = "pop-surface surface-" + variant + " " + data.template + " theme-" + data.color;
@@ -525,6 +546,13 @@ function buildPopSurface(data, variant, isEmptySlot) {
       "pop-comment",
       comment,
       pickSizeClass(comment.length, 18, 28, "size-comment-compact", "size-comment-tight")
+    ));
+
+    appendIfExists(copy, createTextBlock(
+      "p",
+      "pop-description",
+      description,
+      pickSizeClass(description.length, 24, 40, "size-description-compact", "size-description-tight")
     ));
 
     appendIfExists(foot, createTextBlock(
@@ -629,6 +657,7 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var ribbon;
   var title;
   var comment;
+  var description;
   var price;
   var empty;
 
@@ -646,14 +675,15 @@ function applyScreenSurfaceSizing(surface, orientation) {
   ribbon = surface.getElementsByClassName("pop-ribbon")[0];
   title = surface.getElementsByClassName("pop-title")[0];
   comment = surface.getElementsByClassName("pop-comment")[0];
+  description = surface.getElementsByClassName("pop-description")[0];
   price = surface.getElementsByClassName("pop-price")[0];
   empty = surface.getElementsByClassName("pop-empty")[0];
 
   if (inner) {
-    inner.style.paddingTop = Math.max(14, Math.round(24 * scale)) + "px";
-    inner.style.paddingRight = Math.max(14, Math.round(24 * scale)) + "px";
-    inner.style.paddingBottom = Math.max(14, Math.round(22 * scale)) + "px";
-    inner.style.paddingLeft = Math.max(14, Math.round(24 * scale)) + "px";
+    inner.style.paddingTop = Math.max(12, Math.round(20 * scale)) + "px";
+    inner.style.paddingRight = Math.max(12, Math.round(20 * scale)) + "px";
+    inner.style.paddingBottom = Math.max(12, Math.round(18 * scale)) + "px";
+    inner.style.paddingLeft = Math.max(12, Math.round(20 * scale)) + "px";
     inner.style.borderWidth = Math.max(2, Math.round(3 * scale)) + "px";
     inner.style.borderRadius = Math.max(18, Math.round(28 * scale)) + "px";
   }
@@ -671,11 +701,16 @@ function applyScreenSurfaceSizing(surface, orientation) {
 
   setScaledFontSize(title, preset.title, scale, "size-title-compact", "size-title-tight", 20);
   setScaledFontSize(comment, preset.comment, scale, "size-comment-compact", "size-comment-tight", 18);
+  setScaledFontSize(description, preset.description || 24, scale, "size-description-compact", "size-description-tight", 16);
   setScaledFontSize(price, preset.price, scale, "size-price-compact", "size-price-tight", 20);
   setScaledFontSize(empty, 28, scale, "", "", 18);
 
   if (comment) {
     comment.style.marginTop = Math.max(8, Math.round(preset.commentMargin * scale)) + "px";
+  }
+
+  if (description) {
+    description.style.marginTop = Math.max(8, Math.round((preset.descriptionMargin || 12) * scale)) + "px";
   }
 
   if (price) {
@@ -911,6 +946,7 @@ colorSelect.addEventListener("change", function () {
 
 titleInput.addEventListener("input", renderAll);
 commentInput.addEventListener("input", renderAll);
+descriptionInput.addEventListener("input", renderAll);
 priceInput.addEventListener("input", renderAll);
 copiesSelect.addEventListener("change", renderAll);
 
