@@ -2,65 +2,59 @@
 var ROLE_MAP = {
   attention: {
     template: "template-a",
-    label: "遠くで見せる",
-    kicker: "入口・台の前で止める",
     guideTitle: "遠くで足を止めるPOP",
-    guidePlacement: "入口やコーナー先頭向けだよ。",
-    guideCopyRule: "見出しは1つだけ、大きく見せると強いよ。",
-    guideToneRule: "価格より魅力を先に見せると伝わりやすいよ。",
-    helperText: "遠く用はタイトルを短く大きくすると見つけやすいよ。",
-    titleLabel: "大きく見せる言葉",
-    commentLabel: "短いひとこと",
-    priceLabel: "短い補足",
+    guidePlacement: "入口やコーナー先頭に置くと見つけやすいよ。",
+    guideCopyRule: "見出しは1つだけ、大きく見せると止まりやすいよ。",
+    tipLabel: "遠く用",
+    tipText: "見出しを主役にして、価格は小さめにすると強いよ。",
+    titleLabel: "目立たせる言葉",
+    commentLabel: "商品名",
+    priceLabel: "価格",
     titlePlaceholder: "例：春のおすすめ",
-    commentPlaceholder: "例：まず見てほしい人気品です",
-    pricePlaceholder: "例：手作りです",
+    commentPlaceholder: "例：手作りクッキー",
+    pricePlaceholder: "例：300円",
     presets: [
-      { title: "おすすめ", comment: "まず見てほしい人気品です" },
-      { title: "新作", comment: "できたてを並べています" },
-      { title: "春限定", comment: "今だけの味です" }
+      { title: "おすすめ", comment: "手作りクッキー", price: "300円" },
+      { title: "新作", comment: "春のマドレーヌ", price: "280円" },
+      { title: "春限定", comment: "さくらパウンド", price: "350円" }
     ]
   },
   beside: {
     template: "template-b",
-    label: "商品の横",
-    kicker: "選ぶ理由をひとこと",
     guideTitle: "商品横で選ばせるPOP",
-    guidePlacement: "商品のすぐ横や棚前向けだよ。",
-    guideCopyRule: "選ぶ理由をひとことにしぼると見やすいよ。",
-    guideToneRule: "商品と色やことばをそろえると自然だよ。",
-    helperText: "商品横用は『どう良いか』を一言で出すと効きやすいよ。",
-    titleLabel: "商品名 / 目立つ言葉",
-    commentLabel: "選ぶ理由のひとこと",
-    priceLabel: "価格 / 短い補足",
-    titlePlaceholder: "例：手作りクッキー",
-    commentPlaceholder: "例：バター香る人気味です",
-    pricePlaceholder: "例：1袋 300円",
+    guidePlacement: "商品のすぐ横や棚前に置くと効きやすいよ。",
+    guideCopyRule: "選ぶ理由はひとことにしぼると伝わりやすいよ。",
+    tipLabel: "商品横",
+    tipText: "商品名と価格を近くに置くと選びやすいよ。",
+    titleLabel: "選ぶ理由",
+    commentLabel: "商品名",
+    priceLabel: "価格",
+    titlePlaceholder: "例：やさしい甘さ",
+    commentPlaceholder: "例：手作りクッキー",
+    pricePlaceholder: "例：300円",
     presets: [
-      { title: "人気商品", comment: "迷ったらこれが人気です" },
-      { title: "手作りです", comment: "やさしい味わいです" },
-      { title: "売れています", comment: "よく選ばれています" }
+      { title: "人気商品", comment: "手作りクッキー", price: "300円" },
+      { title: "手作りです", comment: "バタークッキー", price: "320円" },
+      { title: "売れています", comment: "しっとりマフィン", price: "280円" }
     ]
   },
   sale: {
     template: "template-c",
-    label: "セール",
-    kicker: "数字を大きく見せる",
     guideTitle: "セールで押すPOP",
-    guidePlacement: "値札の近くや山積み前向けだよ。",
-    guideCopyRule: "数字を大きく、ほかは短くすると強いよ。",
-    guideToneRule: "お得や限定をはっきり見せると効きやすいよ。",
-    helperText: "セール用は価格か限定感を主役にすると伝わりやすいよ。",
-    titleLabel: "強く見せる言葉",
-    commentLabel: "限定・お得のひとこと",
-    priceLabel: "価格 / お得情報",
+    guidePlacement: "値札の近くや山積み前に置くと向いているよ。",
+    guideCopyRule: "数字を一番大きくするとお得感が伝わりやすいよ。",
+    tipLabel: "セール",
+    tipText: "価格か限定感を主役にすると目に入りやすいよ。",
+    titleLabel: "見せたい言葉",
+    commentLabel: "商品名",
+    priceLabel: "価格",
     titlePlaceholder: "例：数量限定",
-    commentPlaceholder: "例：本日だけのお得です",
-    pricePlaceholder: "例：2つで 500円",
+    commentPlaceholder: "例：手作りクッキー",
+    pricePlaceholder: "例：2つで500円",
     presets: [
-      { title: "SALE", comment: "本日だけのお得です" },
-      { title: "数量限定", comment: "なくなり次第終了です" },
-      { title: "お買い得", comment: "今だけこの価格です" }
+      { title: "SALE", comment: "手作りクッキー", price: "2つで500円" },
+      { title: "数量限定", comment: "さくらパウンド", price: "350円" },
+      { title: "お買い得", comment: "しっとりマフィン", price: "280円" }
     ]
   }
 };
@@ -74,9 +68,9 @@ var COLOR_HINT_MAP = {
 };
 
 var DEFAULT_FORM = {
-  title: "おすすめ",
-  comment: "やさしい甘さで人気です",
-  price: "1つ 300円",
+  title: "人気商品",
+  comment: "手作りクッキー",
+  price: "300円",
   role: "beside",
   color: "orange",
   copies: "4",
@@ -108,8 +102,8 @@ var presetRow = document.getElementById("presetRow");
 var guideTitle = document.getElementById("guideTitle");
 var guidePlacement = document.getElementById("guidePlacement");
 var guideCopyRule = document.getElementById("guideCopyRule");
-var guideToneRule = document.getElementById("guideToneRule");
-var helperText = document.getElementById("helperText");
+var tipChip = document.getElementById("tipChip");
+var tipText = document.getElementById("tipText");
 var toneHint = document.getElementById("toneHint");
 var displayPreviewPanel = document.getElementById("displayPreviewPanel");
 var printPreviewPanel = document.getElementById("printPreviewPanel");
@@ -118,14 +112,34 @@ var deviceShell = document.getElementById("deviceShell");
 var devicePreview = document.getElementById("devicePreview");
 var printSheet = document.getElementById("printSheet");
 var displayMode = document.getElementById("displayMode");
+var displayToolbar = document.getElementsByClassName("display-toolbar")[0];
 var displayStage = document.getElementsByClassName("display-stage")[0];
 var closeDisplayButton = document.getElementById("closeDisplayButton");
 var displayFlipButton = document.getElementById("displayFlipButton");
 var displayPrintButton = document.getElementById("displayPrintButton");
 var fullDisplayWrap = document.getElementById("fullDisplayWrap");
+var displayHideTimer = null;
 
 function trimText(value) {
   return String(value || "").replace(/^\s+|\s+$/g, "");
+}
+
+function hasClass(element, className) {
+  return !!element && (" " + (element.className || "") + " ").indexOf(" " + className + " ") !== -1;
+}
+
+function addClass(element, className) {
+  if (element && !hasClass(element, className)) {
+    element.className = trimText((element.className || "") + " " + className);
+  }
+}
+
+function removeClass(element, className) {
+  if (!element) {
+    return;
+  }
+
+  element.className = trimText((element.className || "").replace(new RegExp("(^|\\s)" + className + "(\\s|$)", "g"), " "));
 }
 
 function createElement(tagName, className, text) {
@@ -206,8 +220,8 @@ function syncRoleGuide() {
   guideTitle.textContent = role.guideTitle;
   guidePlacement.textContent = role.guidePlacement;
   guideCopyRule.textContent = role.guideCopyRule;
-  guideToneRule.textContent = role.guideToneRule;
-  helperText.textContent = role.helperText;
+  tipChip.textContent = role.tipLabel;
+  tipText.textContent = role.tipText;
 }
 
 function syncColorHint() {
@@ -369,6 +383,62 @@ function createTextBlock(tagName, baseClass, text, sizeClass) {
   return createElement(tagName, baseClass + (sizeClass ? " " + sizeClass : ""), text);
 }
 
+function detectTemplateName(surface) {
+  var className = surface && surface.className ? surface.className : "";
+
+  if (className.indexOf("template-c") !== -1) {
+    return "template-c";
+  }
+
+  if (className.indexOf("template-b") !== -1) {
+    return "template-b";
+  }
+
+  return "template-a";
+}
+
+function getTemplateScalePreset(templateName) {
+  if (templateName === "template-c") {
+    return {
+      title: 26,
+      comment: 22,
+      price: 112,
+      top: 64,
+      priceWidth: 330,
+      priceMinWidth: 160,
+      priceVerticalPad: 18,
+      priceHorizontalPad: 32,
+      commentMargin: 18
+    };
+  }
+
+  if (templateName === "template-b") {
+    return {
+      title: 24,
+      comment: 60,
+      price: 34,
+      top: 36,
+      priceWidth: 88,
+      priceMinWidth: 0,
+      priceVerticalPad: 11,
+      priceHorizontalPad: 20,
+      commentMargin: 24
+    };
+  }
+
+  return {
+    title: 118,
+    comment: 28,
+    price: 26,
+    top: 18,
+    priceWidth: 110,
+    priceMinWidth: 0,
+    priceVerticalPad: 8,
+    priceHorizontalPad: 14,
+    commentMargin: 28
+  };
+}
+
 function buildPopSurface(data, variant, isEmptySlot) {
   var outer = createElement("article", "pop-surface");
   var inner = createElement("div", "pop-surface__inner");
@@ -505,6 +575,7 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var widthScale;
   var heightScale;
   var scale;
+  var preset;
   var inner;
   var top;
   var ribbon;
@@ -520,6 +591,7 @@ function applyScreenSurfaceSizing(surface, orientation) {
   widthScale = surface.clientWidth / baseWidth;
   heightScale = surface.clientHeight / baseHeight;
   scale = Math.min(widthScale, heightScale);
+  preset = getTemplateScalePreset(detectTemplateName(surface));
 
   inner = surface.getElementsByClassName("pop-surface__inner")[0];
   top = surface.getElementsByClassName("pop-top")[0];
@@ -539,7 +611,7 @@ function applyScreenSurfaceSizing(surface, orientation) {
   }
 
   if (top) {
-    top.style.minHeight = Math.max(18, Math.round(34 * scale)) + "px";
+    top.style.minHeight = Math.max(18, Math.round(preset.top * scale)) + "px";
   }
 
   if (ribbon) {
@@ -549,18 +621,18 @@ function applyScreenSurfaceSizing(surface, orientation) {
     ribbon.style.right = Math.round(-10 * scale) + "px";
   }
 
-  setScaledFontSize(title, 86, scale, "size-title-compact", "size-title-tight", 28);
-  setScaledFontSize(comment, 42, scale, "size-comment-compact", "size-comment-tight", 18);
-  setScaledFontSize(price, 52, scale, "size-price-compact", "size-price-tight", 20);
+  setScaledFontSize(title, preset.title, scale, "size-title-compact", "size-title-tight", 20);
+  setScaledFontSize(comment, preset.comment, scale, "size-comment-compact", "size-comment-tight", 18);
+  setScaledFontSize(price, preset.price, scale, "size-price-compact", "size-price-tight", 20);
   setScaledFontSize(empty, 28, scale, "", "", 18);
 
   if (comment) {
-    comment.style.marginTop = Math.max(8, Math.round(14 * scale)) + "px";
+    comment.style.marginTop = Math.max(8, Math.round(preset.commentMargin * scale)) + "px";
   }
 
   if (price) {
-    price.style.padding = Math.max(10, Math.round(12 * scale)) + "px " + Math.max(16, Math.round(22 * scale)) + "px";
-    price.style.minWidth = Math.max(120, Math.round(180 * scale)) + "px";
+    price.style.padding = Math.max(10, Math.round(preset.priceVerticalPad * scale)) + "px " + Math.max(16, Math.round(preset.priceHorizontalPad * scale)) + "px";
+    price.style.minWidth = Math.max(preset.priceMinWidth || 0, Math.round(preset.priceWidth * scale)) + "px";
     price.style.borderRadius = Math.max(16, Math.round(20 * scale)) + "px";
   }
 }
@@ -645,16 +717,51 @@ function resetForm() {
 
 function openDisplayMode() {
   renderAll();
-  if (document.body.className.indexOf("is-display-mode") === -1) {
-    document.body.className = trimText(document.body.className + " is-display-mode");
-  }
-  displayMode.className = "display-mode";
+  addClass(document.body, "is-display-mode");
+  removeClass(displayMode, "is-hidden");
+  removeClass(displayMode, "is-toolbar-hidden");
   updateDisplayLayout();
+  scheduleDisplayToolbarHide();
 }
 
 function closeDisplayMode() {
-  document.body.className = trimText(document.body.className.replace(/\bis-display-mode\b/g, " "));
-  displayMode.className = "display-mode is-hidden";
+  clearDisplayToolbarTimer();
+  removeClass(document.body, "is-display-mode");
+  removeClass(displayMode, "is-toolbar-hidden");
+  addClass(displayMode, "is-hidden");
+}
+
+function clearDisplayToolbarTimer() {
+  if (displayHideTimer) {
+    clearTimeout(displayHideTimer);
+    displayHideTimer = null;
+  }
+}
+
+function scheduleDisplayToolbarHide() {
+  clearDisplayToolbarTimer();
+
+  if (hasClass(displayMode, "is-hidden")) {
+    return;
+  }
+
+  displayHideTimer = setTimeout(function () {
+    addClass(displayMode, "is-toolbar-hidden");
+  }, 1800);
+}
+
+function showDisplayToolbar() {
+  removeClass(displayMode, "is-toolbar-hidden");
+  scheduleDisplayToolbarHide();
+}
+
+function toggleDisplayToolbar() {
+  if (hasClass(displayMode, "is-toolbar-hidden")) {
+    showDisplayToolbar();
+  } else {
+    clearDisplayToolbarTimer();
+    addClass(displayMode, "is-toolbar-hidden");
+  }
 }
 
 updateButton.addEventListener("click", renderAll);
@@ -674,11 +781,13 @@ closeDisplayButton.addEventListener("click", closeDisplayMode);
 displayFlipButton.addEventListener("click", function () {
   flipOrientation();
   renderAll();
+  showDisplayToolbar();
 });
 
 displayPrintButton.addEventListener("click", function () {
   setPreviewMode("print");
   renderAll();
+  showDisplayToolbar();
   window.print();
 });
 
@@ -762,6 +871,16 @@ bindColorButtons();
 bindOrientationButtons();
 bindPreviewButtons();
 bindPresetButtons();
+displayStage.addEventListener("click", function () {
+  toggleDisplayToolbar();
+});
+displayToolbar.addEventListener("click", function (event) {
+  if (event && typeof event.stopPropagation === "function") {
+    event.stopPropagation();
+  }
+
+  showDisplayToolbar();
+});
 window.addEventListener("resize", updateDisplayLayout);
 setDefaults();
 renderAll();

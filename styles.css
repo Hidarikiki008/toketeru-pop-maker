@@ -102,6 +102,32 @@ select {
   margin-top: 18px;
 }
 
+.step-strip {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -6px;
+  margin-bottom: 14px;
+}
+
+.step-pill {
+  display: inline-block;
+  margin: 0 6px 6px 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #f6efe7;
+  color: #796f6a;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.step-pill.is-current {
+  background: #fff0e8;
+  color: #bb674d;
+}
+
 .field {
   display: block;
   margin-bottom: 12px;
@@ -113,6 +139,10 @@ select {
   color: #7c726d;
   font-size: 13px;
   line-height: 1.5;
+}
+
+.is-screen-only {
+  margin-bottom: 8px;
 }
 
 .field-row {
@@ -220,7 +250,7 @@ button:focus {
 
 .guide-card {
   margin-bottom: 12px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 2px solid #f0dfc9;
   border-radius: 24px;
   background: #fff9ef;
@@ -240,22 +270,22 @@ button:focus {
 }
 
 .guide-title {
-  margin-top: 6px;
-  font-size: 20px;
+  margin-top: 4px;
+  font-size: 18px;
   line-height: 1.3;
 }
 
 .guide-points {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .guide-line {
-  margin-top: 8px;
-  padding: 10px 12px;
+  margin-top: 6px;
+  padding: 8px 10px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.78);
   color: #675f5b;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -380,11 +410,12 @@ button:focus {
 }
 
 .tip-card {
+  margin-top: 4px;
   margin-bottom: 12px;
-  padding: 10px 12px;
-  border: 2px solid #eadfd4;
+  padding: 12px 14px;
+  border: 2px solid #f0dfcf;
   border-radius: 22px;
-  background: #fffdfa;
+  background: #fff8f0;
 }
 
 .tip-card-title,
@@ -398,22 +429,38 @@ button:focus {
   font-weight: bold;
 }
 
-.tip-lines {
+.tip-card-line {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin-right: -8px;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #665d59;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.tip-card-line {
-  width: calc(33.333% - 8px);
-  margin-top: 8px;
-  margin-right: 8px;
-  color: #665d59;
+.tip-chip {
+  display: inline-block;
+  min-width: 58px;
+  margin-right: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff1df;
+  color: #a76638;
   font-size: 12px;
-  line-height: 1.5;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tip-text {
+  display: block;
+  padding-top: 1px;
 }
 
 .toggle-row {
@@ -447,12 +494,6 @@ button:focus {
   color: #7d4f5d;
 }
 
-.helper-text {
-  margin: -2px 0 16px;
-  color: #8c817c;
-  font-size: 13px;
-}
-
 .action-row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -460,7 +501,7 @@ button:focus {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin-right: -10px;
-  margin-bottom: -10px;
+  margin-bottom: 0;
 }
 
 .action-row button {
@@ -478,6 +519,7 @@ button:focus {
   border-radius: 18px;
   font-size: 18px;
   font-weight: bold;
+  line-height: 1.2;
   cursor: pointer;
 }
 
@@ -491,8 +533,8 @@ button:focus {
 
 .secondary-button {
   -webkit-box-flex: 1;
-  -ms-flex: 1 1 150px;
-  flex: 1 1 150px;
+  -ms-flex: 1 1 180px;
+  flex: 1 1 180px;
   background: #f6b258;
   color: #ffffff;
 }
@@ -609,6 +651,16 @@ button:focus {
   border-radius: 26px;
   background: #f2ece4;
   overflow-x: auto;
+}
+
+.print-note {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: #fff4df;
+  color: #7a612f;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .print-sheet {
@@ -879,41 +931,104 @@ button:focus {
   color: #7a5d64;
 }
 
-.template-b .pop-surface__inner {
-  border-style: dashed;
-  border-width: 4px;
+.template-a .pop-copy {
+  padding-top: 0;
 }
 
-.template-b .pop-top {
+.template-a .pop-title {
+  line-height: 1.04;
+  letter-spacing: 0.02em;
+}
+
+.template-a .pop-comment {
+  max-width: 72%;
+  margin-right: auto;
+  margin-left: auto;
+  line-height: 1.18;
+}
+
+.template-a .pop-foot {
   text-align: center;
 }
 
-.template-b .pop-chip {
-  margin: 0 auto;
+.template-a .pop-price {
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.74);
 }
 
-.template-b .pop-kicker {
-  color: #7f5b2c;
+.template-b .pop-surface__inner {
+  border-style: dashed;
+  border-width: 4px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.template-b .pop-top {
+  min-height: 36px;
 }
 
 .template-b .pop-copy {
-  padding-top: 10px;
+  padding-top: 2px;
+  text-align: left;
 }
 
-.template-c .pop-chip {
-  visibility: hidden;
+.template-b .pop-title {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  line-height: 1.2;
 }
 
-.template-c .pop-kicker {
-  color: #8b5131;
+.template-b .pop-comment {
+  max-width: 82%;
+  line-height: 1.16;
+}
+
+.template-b .pop-foot {
+  -ms-flex-item-align: end;
+  align-self: flex-end;
+  margin-top: 22px;
+  text-align: right;
+  padding-right: 6px;
+  padding-bottom: 4px;
+}
+
+.template-b .pop-price {
+  min-width: 0;
+  box-shadow: 0 10px 18px rgba(120, 104, 95, 0.12);
+}
+
+.template-c .pop-top {
+  min-height: 56px;
 }
 
 .template-c .pop-copy {
-  padding-top: 18px;
+  padding-top: 0;
+}
+
+.template-c .pop-title {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  line-height: 1.15;
+}
+
+.template-c .pop-comment {
+  line-height: 1.16;
+}
+
+.template-c .pop-foot {
+  text-align: center;
 }
 
 .template-c .pop-price {
   border-radius: 999px;
+  display: inline-block;
+  box-shadow: 0 14px 24px rgba(120, 104, 95, 0.14);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .theme-pink .pop-surface__inner {
@@ -990,6 +1105,11 @@ button:focus {
   padding: 0;
   background: transparent;
   border-bottom: 0;
+}
+
+.display-mode.is-toolbar-hidden .display-toolbar {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .display-toolbar-right {
@@ -1111,7 +1231,7 @@ body.is-display-mode .app-shell {
   }
 
   .role-grid,
-  .tip-lines {
+  .step-strip {
     display: block;
     margin-right: 0;
   }
@@ -1149,6 +1269,17 @@ body.is-display-mode .app-shell {
   .guide-line {
     font-size: 13px;
     padding: 9px 10px;
+  }
+
+  .tip-card-line {
+    display: block;
+    font-size: 13px;
+    padding: 9px 10px;
+  }
+
+  .tip-chip {
+    margin-right: 0;
+    margin-bottom: 6px;
   }
 
   .print-sheet {

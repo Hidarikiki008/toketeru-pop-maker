@@ -22,6 +22,13 @@
         </div>
 
         <form id="popForm" class="pop-form">
+          <div class="step-strip" aria-label="使い方の順番">
+            <p class="step-pill is-current">1. 置き場所</p>
+            <p class="step-pill">2. 色</p>
+            <p class="step-pill">3. 言葉</p>
+            <p class="step-pill">4. 確認して印刷</p>
+          </div>
+
           <div class="field">
             <span class="field-label">まず、どこで使う？</span>
             <div class="role-grid" id="roleGrid" role="group" aria-label="使う場所">
@@ -46,7 +53,6 @@
             <div class="guide-points">
               <p class="guide-line" id="guidePlacement">入口・台の前・コーナー先頭に置くと向いているよ。</p>
               <p class="guide-line" id="guideCopyRule">見出しは大きく、文字は少なくすると伝わりやすいよ。</p>
-              <p class="guide-line" id="guideToneRule">やさしい商品なら、やさしい色とことばを合わせると自然だよ。</p>
             </div>
           </div>
 
@@ -104,23 +110,23 @@
             <div id="presetRow" class="preset-row" aria-label="よく使う言葉"></div>
           </div>
 
-          <div class="field-row">
-            <label class="field field-half">
-              <span id="titleLabel" class="field-label">タイトル</span>
-              <input id="titleInput" name="title" type="text" maxlength="18" autocomplete="off" placeholder="例：おすすめ">
-            </label>
-
-            <label class="field field-half">
-              <span id="priceLabel" class="field-label">価格 / 短い補足</span>
-              <input id="priceInput" name="price" type="text" maxlength="16" autocomplete="off" placeholder="例：1つ 300円">
-            </label>
-          </div>
-
           <label class="field">
-            <span id="commentLabel" class="field-label">一言コメント</span>
-            <textarea id="commentInput" name="comment" rows="3" maxlength="36" placeholder="例：やさしい甘さで人気です"></textarea>
+            <span id="titleLabel" class="field-label">見出し</span>
+            <input id="titleInput" name="title" type="text" maxlength="18" autocomplete="off" placeholder="例：おすすめ">
           </label>
 
+          <div class="field-row">
+            <label class="field field-half">
+              <span id="commentLabel" class="field-label">商品名</span>
+              <input id="commentInput" name="comment" type="text" maxlength="28" autocomplete="off" placeholder="例：手作りクッキー">
+            </label>
+
+            <label class="field field-half">
+              <span id="priceLabel" class="field-label">価格</span>
+              <input id="priceInput" name="price" type="text" inputmode="decimal" maxlength="16" autocomplete="off" placeholder="例：300円">
+            </label>
+          </div>
+          
           <div class="field-row">
             <div class="field field-half">
               <span class="field-label">iPadの向き</span>
@@ -141,22 +147,19 @@
             </label>
           </div>
 
-          <p id="helperText" class="helper-text">販売会では「大きく表示」で、そのままiPadに出せるよ。</p>
+          <div class="action-row">
+            <button id="updateButton" class="primary-button" type="button">プレビュー更新</button>
+            <button id="openDisplayButton" class="secondary-button" type="button">見本を大きく見る</button>
+            <button id="printButton" class="tertiary-button" type="button">印刷</button>
+            <button id="resetButton" class="ghost-button" type="button">リセット</button>
+          </div>
 
           <div class="tip-card">
             <p class="tip-card-title">売り場で勝つコツ</p>
-            <div class="tip-lines">
-              <p class="tip-card-line">伝えたいことは1つにしぼるよ。</p>
-              <p class="tip-card-line">遠く用は短く大きくが強いよ。</p>
-              <p class="tip-card-line">商品横は理由をひとことが効くよ。</p>
-            </div>
-          </div>
-
-          <div class="action-row">
-            <button id="updateButton" class="primary-button" type="button">見え方を更新</button>
-            <button id="openDisplayButton" class="secondary-button" type="button">大きく表示</button>
-            <button id="printButton" class="tertiary-button" type="button">印刷</button>
-            <button id="resetButton" class="ghost-button" type="button">リセット</button>
+            <p class="tip-card-line">
+              <span id="tipChip" class="tip-chip">商品横</span>
+              <span id="tipText" class="tip-text">商品名と価格を近くに置くと選びやすいよ。</span>
+            </p>
           </div>
         </form>
       </section>
@@ -181,6 +184,7 @@
         </section>
 
         <section id="printPreviewPanel" class="preview-view is-hidden">
+          <p class="print-note">このままA4に4枚並んで印刷されるよ。</p>
           <div class="preview-frame">
             <div id="printSheet" class="print-sheet" aria-live="polite"></div>
           </div>
