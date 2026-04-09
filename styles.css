@@ -818,35 +818,49 @@ button:focus {
 
 .emoji-stamp {
   display: inline-block;
-  margin-left: 0.1em;
+  margin-left: 0.08em;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-size: 1em;
+  font-size: 1.22em;
   line-height: 1;
   letter-spacing: normal;
   white-space: nowrap;
-  -webkit-transform: translate(0.02em, 0.04em) scale(1.18);
-  transform: translate(0.02em, 0.04em) scale(1.18);
+  -webkit-transform: translate(0.01em, 0.05em);
+  transform: translate(0.01em, 0.05em);
   -webkit-transform-origin: center center;
   transform-origin: center center;
-  vertical-align: -0.06em;
+  vertical-align: -0.08em;
   overflow: visible;
 }
 
+.template-a .pop-title .emoji-stamp {
+  font-size: 1.14em;
+}
+
+.template-b .pop-title .emoji-stamp {
+  font-size: 1.48em;
+}
+
+.template-c .pop-title .emoji-stamp {
+  font-size: 1.28em;
+}
+
 .pop-title .emoji-stamp {
-  -webkit-transform: translate(0.02em, 0.03em) scale(1.04);
-  transform: translate(0.02em, 0.03em) scale(1.04);
+  -webkit-transform: translate(0.01em, 0.03em);
+  transform: translate(0.01em, 0.03em);
   vertical-align: -0.04em;
 }
 
 .pop-description .emoji-stamp {
-  -webkit-transform: translate(0.02em, 0.04em) scale(1.08);
-  transform: translate(0.02em, 0.04em) scale(1.08);
+  font-size: 1.34em;
+  -webkit-transform: translate(0.01em, 0.05em);
+  transform: translate(0.01em, 0.05em);
   vertical-align: -0.06em;
 }
 
 .pop-comment .emoji-stamp {
-  -webkit-transform: translate(0.02em, 0.04em) scale(1.22);
-  transform: translate(0.02em, 0.04em) scale(1.22);
+  font-size: 1.18em;
+  -webkit-transform: translate(0.01em, 0.05em);
+  transform: translate(0.01em, 0.05em);
   vertical-align: -0.06em;
 }
 
