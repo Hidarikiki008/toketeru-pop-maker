@@ -784,16 +784,36 @@ button:focus {
 }
 
 .emoji-inline {
-  display: inline-block;
-  margin-left: 0.05em;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  min-width: 1.06em;
+  height: 1.06em;
+  margin-left: 0.08em;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-size: 1.34em;
+  font-size: 1.72em;
   line-height: 1;
-  -webkit-transform: scale(1.08);
-  transform: scale(1.08);
-  -webkit-transform-origin: center 68%;
-  transform-origin: center 68%;
-  vertical-align: -0.14em;
+  letter-spacing: normal;
+  -webkit-transform: translateY(0.08em) scale(1.22);
+  transform: translateY(0.08em) scale(1.22);
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  vertical-align: -0.28em;
+}
+
+.pop-title .emoji-inline {
+  font-size: 1.56em;
+}
+
+.pop-comment .emoji-inline,
+.pop-description .emoji-inline {
+  font-size: 1.48em;
 }
 
 .pop-kicker {
