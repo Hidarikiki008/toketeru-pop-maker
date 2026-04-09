@@ -460,18 +460,34 @@ function escapeSvgText(value) {
 
 function getEmojiStampSrc(emojiText) {
   var key = String(emojiText || "");
-  var svg;
+  var canvas;
+  var context;
+  var size;
+  var pixelRatio;
+  var drawSize;
 
   if (!EMOJI_SVG_CACHE[key]) {
-    svg = [
-      '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet">',
-      '<text x="50%" y="60%" text-anchor="middle" font-size="128" font-family="Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">',
-      escapeSvgText(key),
-      '</text>',
-      '</svg>'
-    ].join("");
+    size = 128;
+    pixelRatio = 2;
+    drawSize = size * pixelRatio;
+    canvas = document.createElement("canvas");
+    canvas.width = drawSize;
+    canvas.height = drawSize;
+    context = canvas.getContext("2d");
 
-    EMOJI_SVG_CACHE[key] = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    if (context) {
+      context.clearRect(0, 0, drawSize, drawSize);
+      context.save();
+      context.scale(pixelRatio, pixelRatio);
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.font = "112px Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol";
+      context.fillText(key, size / 2, size / 2 + 6);
+      context.restore();
+      EMOJI_SVG_CACHE[key] = canvas.toDataURL("image/png");
+    } else {
+      EMOJI_SVG_CACHE[key] = "";
+    }
   }
 
   return EMOJI_SVG_CACHE[key];
@@ -480,12 +496,18 @@ function getEmojiStampSrc(emojiText) {
 function createEmojiStamp(emojiText) {
   var stamp = createElement("span", "emoji-stamp");
   var image = document.createElement("img");
+  var src = getEmojiStampSrc(emojiText);
 
   image.className = "emoji-stamp-image";
   image.alt = "";
   image.setAttribute("aria-hidden", "true");
-  image.src = getEmojiStampSrc(emojiText);
-  stamp.appendChild(image);
+
+  if (src) {
+    image.src = src;
+    stamp.appendChild(image);
+  } else {
+    stamp.textContent = emojiText;
+  }
 
   return stamp;
 }

@@ -1042,9 +1042,14 @@ button:focus {
 }
 
 .template-a .pop-surface__inner {
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.template-a .pop-top {
+  min-height: 40px;
+  margin-bottom: 6px;
 }
 
 .template-a .pop-title {
@@ -1068,7 +1073,7 @@ button:focus {
 
 .template-a .pop-foot {
   width: 100%;
-  margin-top: 26px;
+  margin-top: 20px;
   text-align: center;
 }
 
@@ -1081,9 +1086,9 @@ button:focus {
 .template-b .pop-surface__inner {
   border-style: dashed;
   border-width: 4px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .template-b .pop-top {
@@ -1120,7 +1125,7 @@ button:focus {
 
 .template-b .pop-foot {
   width: 100%;
-  margin-top: 28px;
+  margin-top: 18px;
   text-align: center;
   padding-right: 0;
   padding-bottom: 2px;
