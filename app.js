@@ -88,7 +88,6 @@ var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
 var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
 var TRAILING_EMOJI_PATTERN = /((?:\s*(?:[\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF])))+)$/;
-var EMOJI_SVG_CACHE = {};
 
 var form = document.getElementById("popForm");
 var titleInput = document.getElementById("titleInput");
@@ -451,63 +450,9 @@ function allowEmojiStamp(baseClass) {
   return baseClass === "pop-title" || baseClass === "pop-comment" || baseClass === "pop-description";
 }
 
-function escapeSvgText(value) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function getEmojiStampSrc(emojiText) {
-  var key = String(emojiText || "");
-  var canvas;
-  var context;
-  var size;
-  var pixelRatio;
-  var drawSize;
-
-  if (!EMOJI_SVG_CACHE[key]) {
-    size = 128;
-    pixelRatio = 2;
-    drawSize = size * pixelRatio;
-    canvas = document.createElement("canvas");
-    canvas.width = drawSize;
-    canvas.height = drawSize;
-    context = canvas.getContext("2d");
-
-    if (context) {
-      context.clearRect(0, 0, drawSize, drawSize);
-      context.save();
-      context.scale(pixelRatio, pixelRatio);
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.font = "112px Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol";
-      context.fillText(key, size / 2, size / 2 + 6);
-      context.restore();
-      EMOJI_SVG_CACHE[key] = canvas.toDataURL("image/png");
-    } else {
-      EMOJI_SVG_CACHE[key] = "";
-    }
-  }
-
-  return EMOJI_SVG_CACHE[key];
-}
-
 function createEmojiStamp(emojiText) {
   var stamp = createElement("span", "emoji-stamp");
-  var image = document.createElement("img");
-  var src = getEmojiStampSrc(emojiText);
-
-  image.className = "emoji-stamp-image";
-  image.alt = "";
-  image.setAttribute("aria-hidden", "true");
-
-  if (src) {
-    image.src = src;
-    stamp.appendChild(image);
-  } else {
-    stamp.textContent = emojiText;
-  }
+  stamp.textContent = emojiText;
 
   return stamp;
 }
