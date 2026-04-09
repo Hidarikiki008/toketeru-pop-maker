@@ -824,25 +824,30 @@ button:focus {
   line-height: 1;
   letter-spacing: normal;
   white-space: nowrap;
-  -webkit-transform: translate(0.04em, 0.05em) scale(2.15);
-  transform: translate(0.04em, 0.05em) scale(2.15);
+  -webkit-transform: translate(0.02em, 0.04em) scale(1.18);
+  transform: translate(0.02em, 0.04em) scale(1.18);
   -webkit-transform-origin: center center;
   transform-origin: center center;
-  vertical-align: -0.1em;
+  vertical-align: -0.06em;
   overflow: visible;
 }
 
 .pop-title .emoji-stamp {
-  -webkit-transform: translate(0.03em, 0.04em) scale(1.82);
-  transform: translate(0.03em, 0.04em) scale(1.82);
+  -webkit-transform: translate(0.02em, 0.03em) scale(1.04);
+  transform: translate(0.02em, 0.03em) scale(1.04);
+  vertical-align: -0.04em;
+}
+
+.pop-description .emoji-stamp {
+  -webkit-transform: translate(0.02em, 0.04em) scale(1.08);
+  transform: translate(0.02em, 0.04em) scale(1.08);
   vertical-align: -0.06em;
 }
 
-.pop-comment .emoji-stamp,
-.pop-description .emoji-stamp {
-  -webkit-transform: translate(0.04em, 0.05em) scale(2.02);
-  transform: translate(0.04em, 0.05em) scale(2.02);
-  vertical-align: -0.1em;
+.pop-comment .emoji-stamp {
+  -webkit-transform: translate(0.02em, 0.04em) scale(1.22);
+  transform: translate(0.02em, 0.04em) scale(1.22);
+  vertical-align: -0.06em;
 }
 
 .pop-kicker {

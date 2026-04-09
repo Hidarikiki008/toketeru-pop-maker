@@ -16,9 +16,9 @@ var ROLE_MAP = {
     descriptionPlaceholder: "例：サクサクこうばしい人気味",
     pricePlaceholder: "例：300円",
     presets: [
-      { title: "おすすめ", comment: "手作りクッキー", description: "サクサクこうばしい人気味", price: "300円" },
-      { title: "新作", comment: "春のマドレーヌ", description: "ふわっとやさしい春の香り", price: "280円" },
-      { title: "春限定", comment: "さくらパウンド", description: "今だけのやわらかい味わい", price: "350円" }
+      { title: "おすすめ🌷", comment: "手作りクッキー🍪", description: "サクサクこうばしい人気味☀️", price: "300円" },
+      { title: "新作🌸", comment: "春のマドレーヌ🧁", description: "ふわっとやさしい春の香り", price: "280円" },
+      { title: "春限定🌸", comment: "さくらパウンド🍰", description: "今だけのやわらかい味わい", price: "350円" }
     ]
   },
   beside: {
@@ -37,9 +37,9 @@ var ROLE_MAP = {
     descriptionPlaceholder: "例：サクサク、やさしい甘さ",
     pricePlaceholder: "例：300円",
     presets: [
-      { title: "人気商品", comment: "手作りクッキー", description: "サクサク、やさしい甘さ", price: "300円" },
-      { title: "手作りです", comment: "バタークッキー", description: "バターの香りがふわっと広がるよ", price: "320円" },
-      { title: "売れています", comment: "しっとりマフィン", description: "ふんわり食べやすい人気味だよ", price: "280円" }
+      { title: "人気商品🐱", comment: "手作りクッキー🍪", description: "サクサク、やさしい甘さ☀️", price: "300円" },
+      { title: "手作りです🧺", comment: "バタークッキー🧈", description: "バターの香りがふわっと広がるよ", price: "320円" },
+      { title: "売れています⭐", comment: "しっとりマフィン🧁", description: "ふんわり食べやすい人気味だよ", price: "280円" }
     ]
   },
   sale: {
@@ -58,9 +58,9 @@ var ROLE_MAP = {
     descriptionPlaceholder: "例：今だけのサクサク人気味",
     pricePlaceholder: "例：2つで500円",
     presets: [
-      { title: "SALE", comment: "手作りクッキー", description: "今だけのサクサク人気味", price: "2つで500円" },
-      { title: "数量限定", comment: "さくらパウンド", description: "春だけのふんわり味わい", price: "350円" },
-      { title: "お買い得", comment: "しっとりマフィン", description: "今日いちばんのお買い得だよ", price: "280円" }
+      { title: "SALE🔥", comment: "手作りクッキー🍪", description: "今だけのサクサク人気味", price: "2つで500円" },
+      { title: "数量限定🎀", comment: "さくらパウンド🌸", description: "春だけのふんわり味わい", price: "350円" },
+      { title: "お買い得💛", comment: "しっとりマフィン🧁", description: "今日いちばんのお買い得だよ", price: "280円" }
     ]
   }
 };
@@ -74,9 +74,9 @@ var COLOR_HINT_MAP = {
 };
 
 var DEFAULT_FORM = {
-  title: "人気商品",
-  comment: "手作りクッキー",
-  description: "サクサクこうばしい人気味",
+  title: "人気商品🐱",
+  comment: "手作りクッキー🍪",
+  description: "サクサクこうばしい人気味☀️",
   price: "300円",
   role: "beside",
   color: "orange",
