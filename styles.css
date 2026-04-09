@@ -826,30 +826,31 @@ button:focus {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  min-width: 1.18em;
-  height: 1.18em;
+  width: 1.06em;
+  height: 1.06em;
   margin-left: 0.12em;
-  padding: 0.06em;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 0.08em 0.18em rgba(120, 104, 95, 0.12);
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-size: 1.34em;
+  padding: 0;
   line-height: 1;
-  letter-spacing: normal;
-  vertical-align: -0.18em;
+  vertical-align: -0.12em;
+  overflow: visible;
+}
+
+.emoji-stamp-image {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .pop-title .emoji-stamp {
-  min-width: 1.12em;
-  height: 1.12em;
-  font-size: 1.12em;
-  vertical-align: -0.1em;
+  width: 0.96em;
+  height: 0.96em;
+  vertical-align: -0.08em;
 }
 
 .pop-comment .emoji-stamp,
 .pop-description .emoji-stamp {
-  font-size: 1.22em;
+  width: 0.94em;
+  height: 0.94em;
 }
 
 .pop-kicker {

@@ -88,6 +88,7 @@ var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
 var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
 var TRAILING_EMOJI_PATTERN = /((?:\s*(?:[\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF])))+)$/;
+var EMOJI_SVG_CACHE = {};
 
 var form = document.getElementById("popForm");
 var titleInput = document.getElementById("titleInput");
@@ -450,6 +451,45 @@ function allowEmojiStamp(baseClass) {
   return baseClass === "pop-title" || baseClass === "pop-comment" || baseClass === "pop-description";
 }
 
+function escapeSvgText(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function getEmojiStampSrc(emojiText) {
+  var key = String(emojiText || "");
+  var svg;
+
+  if (!EMOJI_SVG_CACHE[key]) {
+    svg = [
+      '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet">',
+      '<text x="50%" y="60%" text-anchor="middle" font-size="128" font-family="Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">',
+      escapeSvgText(key),
+      '</text>',
+      '</svg>'
+    ].join("");
+
+    EMOJI_SVG_CACHE[key] = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+  }
+
+  return EMOJI_SVG_CACHE[key];
+}
+
+function createEmojiStamp(emojiText) {
+  var stamp = createElement("span", "emoji-stamp");
+  var image = document.createElement("img");
+
+  image.className = "emoji-stamp-image";
+  image.alt = "";
+  image.setAttribute("aria-hidden", "true");
+  image.src = getEmojiStampSrc(emojiText);
+  stamp.appendChild(image);
+
+  return stamp;
+}
+
 function createTextBlock(tagName, baseClass, text, sizeClass) {
   var element;
   var parts;
@@ -467,7 +507,7 @@ function createTextBlock(tagName, baseClass, text, sizeClass) {
   }
 
   if (parts.emoji) {
-    stamp = createElement("span", "emoji-stamp", parts.emoji);
+    stamp = createEmojiStamp(parts.emoji);
     element.appendChild(stamp);
   }
 
