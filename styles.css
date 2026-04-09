@@ -7,7 +7,7 @@ body {
 body {
   background: #f5efe7;
   color: #4e4846;
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   line-height: 1.5;
 }
 
@@ -779,6 +779,15 @@ button:focus {
   margin: 0;
   word-break: break-word;
   overflow-wrap: break-word;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+.emoji-inline {
+  display: inline-block;
+  margin-left: 0.03em;
+  font-size: 1.12em;
+  line-height: 1;
+  vertical-align: -0.08em;
 }
 
 .pop-kicker {
@@ -941,7 +950,7 @@ button:focus {
 }
 
 .template-a .pop-comment {
-  max-width: 72%;
+  max-width: 80%;
   margin-right: auto;
   margin-left: auto;
   line-height: 1.18;
@@ -954,23 +963,21 @@ button:focus {
 .template-a .pop-price {
   min-width: 0;
   background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 10px 18px rgba(120, 104, 95, 0.1);
 }
 
 .template-b .pop-surface__inner {
   border-style: dashed;
   border-width: 4px;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .template-b .pop-top {
-  min-height: 36px;
+  min-height: 44px;
 }
 
 .template-b .pop-copy {
-  padding-top: 2px;
-  text-align: left;
+  padding-top: 10px;
+  text-align: center;
 }
 
 .template-b .pop-title {
@@ -982,17 +989,18 @@ button:focus {
 }
 
 .template-b .pop-comment {
-  max-width: 82%;
-  line-height: 1.16;
+  max-width: 88%;
+  margin-right: auto;
+  margin-left: auto;
+  line-height: 1.12;
 }
 
 .template-b .pop-foot {
-  -ms-flex-item-align: end;
-  align-self: flex-end;
-  margin-top: 22px;
-  text-align: right;
-  padding-right: 6px;
-  padding-bottom: 4px;
+  width: 100%;
+  margin-top: 24px;
+  text-align: center;
+  padding-right: 0;
+  padding-bottom: 2px;
 }
 
 .template-b .pop-price {
@@ -1001,7 +1009,7 @@ button:focus {
 }
 
 .template-c .pop-top {
-  min-height: 56px;
+  min-height: 68px;
 }
 
 .template-c .pop-copy {
@@ -1017,11 +1025,20 @@ button:focus {
 }
 
 .template-c .pop-comment {
-  line-height: 1.16;
+  max-width: 78%;
+  margin-right: auto;
+  margin-left: auto;
+  line-height: 1.14;
 }
 
 .template-c .pop-foot {
   text-align: center;
+}
+
+.template-c .pop-ribbon {
+  border-radius: 20px;
+  -webkit-transform: rotate(5deg);
+  transform: rotate(5deg);
 }
 
 .template-c .pop-price {

@@ -79,6 +79,7 @@ var DEFAULT_FORM = {
 
 var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
+var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
 
 var form = document.getElementById("popForm");
 var titleInput = document.getElementById("titleInput");
@@ -375,12 +376,50 @@ function appendIfExists(parent, child) {
   }
 }
 
+function appendTextWithEmoji(element, text) {
+  var lastIndex = 0;
+  var match;
+  var fragment;
+  var emoji;
+
+  if (!text) {
+    return;
+  }
+
+  fragment = document.createDocumentFragment();
+  EMOJI_PATTERN.lastIndex = 0;
+
+  match = EMOJI_PATTERN.exec(text);
+
+  while (match) {
+    if (match.index > lastIndex) {
+      fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+    }
+
+    emoji = createElement("span", "emoji-inline", match[0]);
+    fragment.appendChild(emoji);
+    lastIndex = EMOJI_PATTERN.lastIndex;
+    match = EMOJI_PATTERN.exec(text);
+  }
+
+  if (lastIndex < text.length) {
+    fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+  }
+
+  element.appendChild(fragment);
+}
+
 function createTextBlock(tagName, baseClass, text, sizeClass) {
+  var element;
+
   if (!text) {
     return null;
   }
 
-  return createElement(tagName, baseClass + (sizeClass ? " " + sizeClass : ""), text);
+  element = createElement(tagName, baseClass + (sizeClass ? " " + sizeClass : ""));
+  appendTextWithEmoji(element, text);
+
+  return element;
 }
 
 function detectTemplateName(surface) {
@@ -400,42 +439,51 @@ function detectTemplateName(surface) {
 function getTemplateScalePreset(templateName) {
   if (templateName === "template-c") {
     return {
-      title: 26,
-      comment: 22,
-      price: 112,
-      top: 64,
-      priceWidth: 330,
-      priceMinWidth: 160,
-      priceVerticalPad: 18,
-      priceHorizontalPad: 32,
-      commentMargin: 18
+      title: 36,
+      comment: 30,
+      price: 98,
+      top: 78,
+      priceWidth: 250,
+      priceMinWidth: 140,
+      priceVerticalPad: 16,
+      priceHorizontalPad: 28,
+      commentMargin: 20,
+      ribbonFont: 34,
+      ribbonVerticalPad: 10,
+      ribbonHorizontalPad: 22
     };
   }
 
   if (templateName === "template-b") {
     return {
-      title: 24,
-      comment: 60,
-      price: 34,
-      top: 36,
-      priceWidth: 88,
+      title: 30,
+      comment: 52,
+      price: 42,
+      top: 44,
+      priceWidth: 120,
       priceMinWidth: 0,
-      priceVerticalPad: 11,
-      priceHorizontalPad: 20,
-      commentMargin: 24
+      priceVerticalPad: 12,
+      priceHorizontalPad: 24,
+      commentMargin: 20,
+      ribbonFont: 24,
+      ribbonVerticalPad: 8,
+      ribbonHorizontalPad: 16
     };
   }
 
   return {
-    title: 118,
-    comment: 28,
-    price: 26,
-    top: 18,
-    priceWidth: 110,
+    title: 100,
+    comment: 38,
+    price: 34,
+    top: 28,
+    priceWidth: 120,
     priceMinWidth: 0,
-    priceVerticalPad: 8,
-    priceHorizontalPad: 14,
-    commentMargin: 28
+    priceVerticalPad: 10,
+    priceHorizontalPad: 20,
+    commentMargin: 24,
+    ribbonFont: 24,
+    ribbonVerticalPad: 8,
+    ribbonHorizontalPad: 16
   };
 }
 
@@ -615,8 +663,8 @@ function applyScreenSurfaceSizing(surface, orientation) {
   }
 
   if (ribbon) {
-    ribbon.style.padding = Math.max(6, Math.round(8 * scale)) + "px " + Math.max(10, Math.round(16 * scale)) + "px";
-    ribbon.style.fontSize = Math.max(14, Math.round(24 * scale)) + "px";
+    ribbon.style.padding = Math.max(6, Math.round((preset.ribbonVerticalPad || 8) * scale)) + "px " + Math.max(10, Math.round((preset.ribbonHorizontalPad || 16) * scale)) + "px";
+    ribbon.style.fontSize = Math.max(14, Math.round((preset.ribbonFont || 24) * scale)) + "px";
     ribbon.style.borderRadius = Math.max(12, Math.round(16 * scale)) + "px";
     ribbon.style.right = Math.round(-10 * scale) + "px";
   }
