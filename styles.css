@@ -820,22 +820,29 @@ button:focus {
   display: inline-block;
   margin-left: 0.08em;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-size: 1.42em;
-  line-height: 0.88;
+  font-size: 1em;
+  line-height: 1;
   letter-spacing: normal;
   white-space: nowrap;
-  vertical-align: -0.12em;
+  -webkit-transform: translateY(0.14em) scale(1.9);
+  transform: translateY(0.14em) scale(1.9);
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+  vertical-align: -0.18em;
+  overflow: visible;
 }
 
 .pop-title .emoji-stamp {
-  font-size: 1.18em;
-  vertical-align: -0.08em;
+  -webkit-transform: translateY(0.1em) scale(1.55);
+  transform: translateY(0.1em) scale(1.55);
+  vertical-align: -0.12em;
 }
 
 .pop-comment .emoji-stamp,
 .pop-description .emoji-stamp {
-  font-size: 1.08em;
-  vertical-align: -0.1em;
+  -webkit-transform: translateY(0.14em) scale(1.8);
+  transform: translateY(0.14em) scale(1.8);
+  vertical-align: -0.18em;
 }
 
 .pop-kicker {
