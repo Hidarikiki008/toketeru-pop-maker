@@ -220,7 +220,7 @@ button:focus {
 
 .guide-card {
   margin-bottom: 12px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border: 2px solid #f0dfc9;
   border-radius: 24px;
   background: #fff9ef;
@@ -234,34 +234,29 @@ button:focus {
 
 .guide-kicker {
   color: #cc8452;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   letter-spacing: 0.04em;
 }
 
 .guide-title {
-  margin-top: 4px;
-  font-size: 18px;
+  margin-top: 6px;
+  font-size: 20px;
   line-height: 1.3;
 }
 
 .guide-points {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin-right: -8px;
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .guide-line {
-  width: calc(33.333% - 8px);
-  margin-top: 0;
-  margin-right: 8px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.78);
   color: #675f5b;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .preset-row {
@@ -285,6 +280,11 @@ button:focus {
 }
 
 .color-grid {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   margin-right: -6px;
   margin-bottom: -6px;
 }
@@ -296,11 +296,11 @@ button:focus {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  width: calc(33.333% - 6px);
-  min-height: 78px;
+  width: calc(50% - 6px);
+  min-height: 82px;
   margin-right: 6px;
   margin-bottom: 6px;
-  padding: 10px 10px;
+  padding: 12px 12px;
   border: 2px solid #e4d7cd;
   border-radius: 20px;
   background: #ffffff;
@@ -338,13 +338,13 @@ button:focus {
 }
 
 .color-name {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.3;
 }
 
 .color-use {
   color: #7c726d;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -691,6 +691,10 @@ button:focus {
   z-index: 2;
 }
 
+.pop-top {
+  min-height: 34px;
+}
+
 .pop-chip,
 .pop-ribbon {
   display: inline-block;
@@ -763,23 +767,6 @@ button:focus {
 .pop-empty {
   color: #8d8480;
   font-size: 22px;
-}
-
-.surface-device .pop-title {
-  font-size: 52px;
-}
-
-.surface-full .pop-title {
-  font-size: 86px;
-}
-
-.surface-full .pop-comment {
-  font-size: 42px;
-}
-
-.surface-full .pop-price {
-  font-size: 52px;
-  padding: 18px 30px;
 }
 
 .surface-print-wrap {
@@ -922,7 +909,7 @@ button:focus {
 }
 
 .template-c .pop-copy {
-  padding-top: 34px;
+  padding-top: 18px;
 }
 
 .template-c .pop-price {
@@ -1097,13 +1084,8 @@ body.is-display-mode .app-shell {
     width: calc(50% - 8px);
   }
 
-  .guide-line,
-  .tip-card-line {
-    width: calc(50% - 8px);
-  }
-
   .color-card {
-    width: calc(33.333% - 6px);
+    width: calc(50% - 6px);
   }
 }
 
@@ -1129,7 +1111,6 @@ body.is-display-mode .app-shell {
   }
 
   .role-grid,
-  .guide-points,
   .tip-lines {
     display: block;
     margin-right: 0;
@@ -1141,7 +1122,6 @@ body.is-display-mode .app-shell {
   }
 
   .role-card,
-  .guide-line,
   .tip-card-line,
   .color-card {
     width: 100%;
@@ -1166,16 +1146,9 @@ body.is-display-mode .app-shell {
     height: 336px;
   }
 
-  .surface-device .pop-title {
-    font-size: 34px;
-  }
-
-  .surface-device .pop-comment {
-    font-size: 20px;
-  }
-
-  .surface-device .pop-price {
-    font-size: 24px;
+  .guide-line {
+    font-size: 13px;
+    padding: 9px 10px;
   }
 
   .print-sheet {

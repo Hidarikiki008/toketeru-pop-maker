@@ -5,9 +5,9 @@ var ROLE_MAP = {
     label: "遠くで見せる",
     kicker: "入口・台の前で止める",
     guideTitle: "遠くで足を止めるPOP",
-    guidePlacement: "入口・台の前・コーナー先頭に置くと向いているよ。",
-    guideCopyRule: "見出しは大きく、文字は少なくすると伝わりやすいよ。",
-    guideToneRule: "情報POP向けだよ。価格より、まず見てほしい理由を出すと強いよ。",
+    guidePlacement: "入口やコーナー先頭向けだよ。",
+    guideCopyRule: "見出しは1つだけ、大きく見せると強いよ。",
+    guideToneRule: "価格より魅力を先に見せると伝わりやすいよ。",
     helperText: "遠く用はタイトルを短く大きくすると見つけやすいよ。",
     titleLabel: "大きく見せる言葉",
     commentLabel: "短いひとこと",
@@ -26,9 +26,9 @@ var ROLE_MAP = {
     label: "商品の横",
     kicker: "選ぶ理由をひとこと",
     guideTitle: "商品横で選ばせるPOP",
-    guidePlacement: "商品のすぐ横や棚前に置くと向いているよ。",
-    guideCopyRule: "商品名より、選ぶ理由を一つだけ書くと伝わりやすいよ。",
-    guideToneRule: "情報POPと商品トーンをそろえると自然だよ。",
+    guidePlacement: "商品のすぐ横や棚前向けだよ。",
+    guideCopyRule: "選ぶ理由をひとことにしぼると見やすいよ。",
+    guideToneRule: "商品と色やことばをそろえると自然だよ。",
     helperText: "商品横用は『どう良いか』を一言で出すと効きやすいよ。",
     titleLabel: "商品名 / 目立つ言葉",
     commentLabel: "選ぶ理由のひとこと",
@@ -47,9 +47,9 @@ var ROLE_MAP = {
     label: "セール",
     kicker: "数字を大きく見せる",
     guideTitle: "セールで押すPOP",
-    guidePlacement: "値札の近くや山積み前に置くと向いているよ。",
-    guideCopyRule: "数字と限定感を強くして、他の文字は減らすと見やすいよ。",
-    guideToneRule: "価格POP向けだよ。お得と期限をはっきり見せると強いよ。",
+    guidePlacement: "値札の近くや山積み前向けだよ。",
+    guideCopyRule: "数字を大きく、ほかは短くすると強いよ。",
+    guideToneRule: "お得や限定をはっきり見せると効きやすいよ。",
     helperText: "セール用は価格か限定感を主役にすると伝わりやすいよ。",
     titleLabel: "強く見せる言葉",
     commentLabel: "限定・お得のひとこと",
@@ -91,6 +91,7 @@ var titleInput = document.getElementById("titleInput");
 var commentInput = document.getElementById("commentInput");
 var priceInput = document.getElementById("priceInput");
 var colorSelect = document.getElementById("colorSelect");
+var colorGrid = document.getElementById("colorGrid");
 var colorButtons = document.querySelectorAll("[data-color]");
 var copiesSelect = document.getElementById("copiesSelect");
 var updateButton = document.getElementById("updateButton");
@@ -139,6 +140,24 @@ function createElement(tagName, className, text) {
   }
 
   return element;
+}
+
+function findTargetWithAttribute(startNode, attributeName, stopNode) {
+  var node = startNode;
+
+  while (node) {
+    if (node.nodeType === 1 && node.getAttribute && node.getAttribute(attributeName) !== null) {
+      return node;
+    }
+
+    if (node === stopNode) {
+      break;
+    }
+
+    node = node.parentNode;
+  }
+
+  return null;
 }
 
 function setDefaults() {
@@ -318,8 +337,6 @@ function getFormData() {
     price: priceInput.value,
     role: roleName,
     template: role.template,
-    roleLabel: role.label,
-    roleKicker: role.kicker,
     color: colorSelect.value,
     copies: copiesSelect.value,
     orientation: getOrientation()
@@ -360,8 +377,6 @@ function buildPopSurface(data, variant, isEmptySlot) {
   var top = createElement("div", "pop-top");
   var copy = createElement("div", "pop-copy");
   var foot = createElement("div", "pop-foot");
-  var chip = createElement("p", "pop-chip");
-  var kicker = createElement("p", "pop-kicker");
   var title = trimText(data.title);
   var comment = trimText(data.comment);
   var price = trimText(data.price);
@@ -372,12 +387,9 @@ function buildPopSurface(data, variant, isEmptySlot) {
 
   if (isEmptySlot) {
     outer.className += " is-empty-slot";
-    chip.textContent = "空き";
+    top.appendChild(createElement("p", "pop-chip", "空き"));
     copy.appendChild(createElement("p", "pop-empty screen-only", "この面は使わないよ"));
   } else {
-    chip.textContent = data.roleLabel;
-    kicker.textContent = data.roleKicker;
-
     if (data.template === "template-c") {
       ribbon = createElement("p", "pop-ribbon", "SALE");
       top.appendChild(ribbon);
@@ -409,8 +421,6 @@ function buildPopSurface(data, variant, isEmptySlot) {
     }
   }
 
-  top.appendChild(chip);
-  top.appendChild(kicker);
   inner.appendChild(glowOne);
   inner.appendChild(glowTwo);
   inner.appendChild(top);
@@ -457,6 +467,111 @@ function sizeBox(element, maxWidth, maxHeight, orientation) {
   element.style.height = Math.floor(height) + "px";
 }
 
+function getScaleMultiplier(element, compactClass, tightClass) {
+  var className;
+
+  if (!element) {
+    return 1;
+  }
+
+  className = element.className || "";
+
+  if (className.indexOf(tightClass) !== -1) {
+    return 0.68;
+  }
+
+  if (className.indexOf(compactClass) !== -1) {
+    return 0.84;
+  }
+
+  return 1;
+}
+
+function setScaledFontSize(element, baseSize, scale, compactClass, tightClass, minSize) {
+  var size;
+
+  if (!element) {
+    return;
+  }
+
+  size = baseSize * scale * getScaleMultiplier(element, compactClass, tightClass);
+  element.style.fontSize = Math.max(minSize, Math.round(size)) + "px";
+}
+
+// プレビューと本番表示で同じ比率になるよう、画面サイズから文字を合わせるよ。
+function applyScreenSurfaceSizing(surface, orientation) {
+  var baseWidth = orientation === "landscape" ? 1024 : 768;
+  var baseHeight = orientation === "landscape" ? 768 : 1024;
+  var widthScale;
+  var heightScale;
+  var scale;
+  var inner;
+  var top;
+  var ribbon;
+  var title;
+  var comment;
+  var price;
+  var empty;
+
+  if (!surface || surface.clientWidth < 1 || surface.clientHeight < 1) {
+    return;
+  }
+
+  widthScale = surface.clientWidth / baseWidth;
+  heightScale = surface.clientHeight / baseHeight;
+  scale = Math.min(widthScale, heightScale);
+
+  inner = surface.getElementsByClassName("pop-surface__inner")[0];
+  top = surface.getElementsByClassName("pop-top")[0];
+  ribbon = surface.getElementsByClassName("pop-ribbon")[0];
+  title = surface.getElementsByClassName("pop-title")[0];
+  comment = surface.getElementsByClassName("pop-comment")[0];
+  price = surface.getElementsByClassName("pop-price")[0];
+  empty = surface.getElementsByClassName("pop-empty")[0];
+
+  if (inner) {
+    inner.style.paddingTop = Math.max(14, Math.round(24 * scale)) + "px";
+    inner.style.paddingRight = Math.max(14, Math.round(24 * scale)) + "px";
+    inner.style.paddingBottom = Math.max(14, Math.round(22 * scale)) + "px";
+    inner.style.paddingLeft = Math.max(14, Math.round(24 * scale)) + "px";
+    inner.style.borderWidth = Math.max(2, Math.round(3 * scale)) + "px";
+    inner.style.borderRadius = Math.max(18, Math.round(28 * scale)) + "px";
+  }
+
+  if (top) {
+    top.style.minHeight = Math.max(18, Math.round(34 * scale)) + "px";
+  }
+
+  if (ribbon) {
+    ribbon.style.padding = Math.max(6, Math.round(8 * scale)) + "px " + Math.max(10, Math.round(16 * scale)) + "px";
+    ribbon.style.fontSize = Math.max(14, Math.round(24 * scale)) + "px";
+    ribbon.style.borderRadius = Math.max(12, Math.round(16 * scale)) + "px";
+    ribbon.style.right = Math.round(-10 * scale) + "px";
+  }
+
+  setScaledFontSize(title, 86, scale, "size-title-compact", "size-title-tight", 28);
+  setScaledFontSize(comment, 42, scale, "size-comment-compact", "size-comment-tight", 18);
+  setScaledFontSize(price, 52, scale, "size-price-compact", "size-price-tight", 20);
+  setScaledFontSize(empty, 28, scale, "", "", 18);
+
+  if (comment) {
+    comment.style.marginTop = Math.max(8, Math.round(14 * scale)) + "px";
+  }
+
+  if (price) {
+    price.style.padding = Math.max(10, Math.round(12 * scale)) + "px " + Math.max(16, Math.round(22 * scale)) + "px";
+    price.style.minWidth = Math.max(120, Math.round(180 * scale)) + "px";
+    price.style.borderRadius = Math.max(16, Math.round(20 * scale)) + "px";
+  }
+}
+
+function syncScreenSurfaceSizing() {
+  var orientation = getOrientation();
+
+  applyScreenSurfaceSizing(devicePreview.firstChild, orientation);
+  applyScreenSurfaceSizing(fullDisplayWrap.firstChild, orientation);
+}
+
 function updateDisplayLayout() {
   var orientation = getOrientation();
   var previewWidth = deviceStage.clientWidth - 36;
@@ -474,6 +589,7 @@ function updateDisplayLayout() {
 
   sizeBox(deviceShell, previewWidth, previewHeight, orientation);
   sizeBox(fullDisplayWrap, fullWidth, fullHeight, orientation);
+  syncScreenSurfaceSizing();
 }
 
 function renderDevicePreview(data) {
@@ -595,14 +711,16 @@ function bindRoleButtons() {
 }
 
 function bindColorButtons() {
-  var i;
+  colorGrid.addEventListener("click", function (event) {
+    var target = findTargetWithAttribute(event.target || event.srcElement, "data-color", colorGrid);
 
-  for (i = 0; i < colorButtons.length; i += 1) {
-    colorButtons[i].addEventListener("click", function () {
-      setColor(this.getAttribute("data-color"));
-      renderAll();
-    });
-  }
+    if (!target) {
+      return;
+    }
+
+    setColor(target.getAttribute("data-color"));
+    renderAll();
+  });
 }
 
 function bindPreviewButtons() {
