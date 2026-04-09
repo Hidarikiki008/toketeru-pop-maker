@@ -816,6 +816,42 @@ button:focus {
   font-size: 1.48em;
 }
 
+.emoji-stamp {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  min-width: 1.18em;
+  height: 1.18em;
+  margin-left: 0.12em;
+  padding: 0.06em;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0.08em 0.18em rgba(120, 104, 95, 0.12);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-size: 1.34em;
+  line-height: 1;
+  letter-spacing: normal;
+  vertical-align: -0.18em;
+}
+
+.pop-title .emoji-stamp {
+  min-width: 1.12em;
+  height: 1.12em;
+  font-size: 1.12em;
+  vertical-align: -0.1em;
+}
+
+.pop-comment .emoji-stamp,
+.pop-description .emoji-stamp {
+  font-size: 1.22em;
+}
+
 .pop-kicker {
   margin-top: 10px;
   font-size: 20px;
@@ -1001,7 +1037,13 @@ button:focus {
 }
 
 .template-a .pop-copy {
-  padding-top: 0;
+  padding-top: 4px;
+}
+
+.template-a .pop-surface__inner {
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .template-a .pop-title {
@@ -1024,18 +1066,23 @@ button:focus {
 }
 
 .template-a .pop-foot {
+  width: 100%;
+  margin-top: 26px;
   text-align: center;
 }
 
 .template-a .pop-price {
   min-width: 0;
-  background: rgba(255, 255, 255, 0.74);
-  box-shadow: 0 10px 18px rgba(120, 104, 95, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 20px rgba(120, 104, 95, 0.12);
 }
 
 .template-b .pop-surface__inner {
   border-style: dashed;
   border-width: 4px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .template-b .pop-top {
@@ -1072,7 +1119,7 @@ button:focus {
 
 .template-b .pop-foot {
   width: 100%;
-  margin-top: 24px;
+  margin-top: 28px;
   text-align: center;
   padding-right: 0;
   padding-bottom: 2px;
@@ -1080,7 +1127,8 @@ button:focus {
 
 .template-b .pop-price {
   min-width: 0;
-  box-shadow: 0 10px 18px rgba(120, 104, 95, 0.12);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12px 22px rgba(120, 104, 95, 0.14);
 }
 
 .template-c .pop-top {

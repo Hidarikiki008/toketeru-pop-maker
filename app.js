@@ -87,6 +87,7 @@ var DEFAULT_FORM = {
 var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
 var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
+var TRAILING_EMOJI_PATTERN = /((?:\s*(?:[\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF])))+)$/;
 
 var form = document.getElementById("popForm");
 var titleInput = document.getElementById("titleInput");
@@ -423,15 +424,56 @@ function appendTextWithEmoji(element, text) {
   element.appendChild(fragment);
 }
 
+function splitTrailingEmoji(text) {
+  var value = String(text || "");
+  var match = value.match(TRAILING_EMOJI_PATTERN);
+  var emojiText;
+  var bodyText;
+
+  if (!match) {
+    return {
+      body: value,
+      emoji: ""
+    };
+  }
+
+  emojiText = trimText(match[1]);
+  bodyText = value.slice(0, value.length - match[1].length).replace(/\s+$/g, "");
+
+  return {
+    body: bodyText,
+    emoji: emojiText
+  };
+}
+
+function allowEmojiStamp(baseClass) {
+  return baseClass === "pop-title" || baseClass === "pop-comment" || baseClass === "pop-description";
+}
+
 function createTextBlock(tagName, baseClass, text, sizeClass) {
   var element;
+  var parts;
+  var stamp;
 
   if (!text) {
     return null;
   }
 
   element = createElement(tagName, baseClass + (sizeClass ? " " + sizeClass : ""));
-  appendTextWithEmoji(element, text);
+  parts = allowEmojiStamp(baseClass) ? splitTrailingEmoji(text) : { body: text, emoji: "" };
+
+  if (parts.body) {
+    appendTextWithEmoji(element, parts.body);
+  }
+
+  if (parts.emoji) {
+    stamp = createElement("span", "emoji-stamp", parts.emoji);
+    element.appendChild(stamp);
+  }
+
+  if (!parts.body && !parts.emoji) {
+    appendTextWithEmoji(element, text);
+  }
 
   return element;
 }
@@ -475,12 +517,12 @@ function getTemplateScalePreset(templateName) {
       title: 30,
       comment: 64,
       description: 28,
-      price: 42,
+      price: 54,
       top: 44,
-      priceWidth: 120,
+      priceWidth: 156,
       priceMinWidth: 0,
-      priceVerticalPad: 12,
-      priceHorizontalPad: 24,
+      priceVerticalPad: 14,
+      priceHorizontalPad: 28,
       commentMargin: 20,
       descriptionMargin: 14,
       ribbonFont: 24,
@@ -493,12 +535,12 @@ function getTemplateScalePreset(templateName) {
     title: 100,
     comment: 48,
     description: 24,
-    price: 34,
+    price: 46,
     top: 28,
-    priceWidth: 120,
+    priceWidth: 148,
     priceMinWidth: 0,
-    priceVerticalPad: 10,
-    priceHorizontalPad: 20,
+    priceVerticalPad: 12,
+    priceHorizontalPad: 26,
     commentMargin: 24,
     descriptionMargin: 16,
     ribbonFont: 24,
