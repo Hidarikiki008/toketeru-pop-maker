@@ -161,6 +161,14 @@ select {
   padding-right: 6px;
 }
 
+.field-full {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 .field-label {
   display: block;
   margin-bottom: 8px;
@@ -494,6 +502,42 @@ button:focus {
   color: #7d4f5d;
 }
 
+.template-mode-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-right: -10px;
+  margin-bottom: -10px;
+}
+
+.mode-button {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 50%;
+  flex: 1 1 50%;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  min-height: 54px;
+  padding: 12px 16px;
+  border: 2px solid #dfd2c8;
+  border-radius: 18px;
+  background: #fff8f2;
+  color: #5b5350;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.mode-button.is-active {
+  border-color: #f0b56c;
+  background: #fff6e6;
+  color: #7a5730;
+}
+
+.field.is-hidden,
+.field-row.is-hidden {
+  display: none;
+}
+
 .action-row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -688,6 +732,61 @@ button:focus {
   height: 100%;
   overflow: hidden;
   border-radius: 28px;
+}
+
+.pop-fixed-surface {
+  background: #fffdf9;
+}
+
+.fixed-template-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fixed-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.fixed-price {
+  position: absolute;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-weight: 900;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.fixed-role-attention .fixed-price {
+  top: 63.2%;
+  left: 50%;
+  color: #8a663d;
+  transform: translate(-50%, -50%);
+}
+
+.fixed-role-beside .fixed-price {
+  top: 73.2%;
+  left: 49.4%;
+  color: #8a663d;
+  transform: translate(-50%, -50%);
+}
+
+.fixed-role-sale .fixed-price {
+  top: 69.2%;
+  left: 50%;
+  color: #db6278;
+  font-weight: 900;
+  letter-spacing: 0;
+  -webkit-text-stroke: 0.6px rgba(219, 98, 120, 0.18);
+  transform: translate(-50%, -50%);
 }
 
 .pop-surface__inner {
@@ -1540,12 +1639,18 @@ body.is-display-mode .app-shell {
 
   #printPreviewPanel {
     display: block !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-note {
+    display: none !important;
   }
 
   .print-sheet {
     width: 190mm;
     min-width: 0;
-    height: 277mm;
+    height: 255mm;
     min-height: 0;
     padding: 0;
     border-radius: 0;
@@ -1554,7 +1659,7 @@ body.is-display-mode .app-shell {
 
   .surface-print-wrap {
     width: 48.1%;
-    height: 132mm;
+    height: 122mm;
     margin-bottom: 0;
     break-inside: avoid;
     page-break-inside: avoid;

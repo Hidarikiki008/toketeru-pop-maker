@@ -81,11 +81,19 @@ var DEFAULT_FORM = {
   role: "beside",
   color: "orange",
   copies: "4",
-  orientation: "landscape"
+  templateMode: "fixed",
+  orientation: "portrait"
+};
+
+var TEMPLATE_IMAGE_MAP = {
+  attention: "assets/templates/template-a-fixed.png",
+  beside: "assets/templates/template-b-fixed.png",
+  sale: "assets/templates/template-c-fixed.png"
 };
 
 var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
+var CURRENT_TEMPLATE_MODE = DEFAULT_FORM.templateMode;
 var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
 var TRAILING_EMOJI_PATTERN = /((?:\s*(?:[\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF])))+)$/;
 
@@ -130,6 +138,108 @@ var displayFlipButton = document.getElementById("displayFlipButton");
 var displayPrintButton = document.getElementById("displayPrintButton");
 var fullDisplayWrap = document.getElementById("fullDisplayWrap");
 var displayHideTimer = null;
+var templateModeButtons = [];
+var templateModeNote = null;
+var fixedPriceWrap = null;
+var fixedPriceInput = null;
+var freeFieldBlocks = [];
+
+function setupTemplateModeUI() {
+  var modeField;
+  var modeLabel;
+  var modeRow;
+  var fixedButton;
+  var freeButton;
+  var priceField;
+  var priceLabel;
+  var priceFieldWrapper;
+  var colorField;
+  var presetField;
+  var titleField;
+  var descriptionField;
+  var commentRow;
+
+  if (!form || !toneHint || !presetRow || !titleInput || !descriptionInput || !priceInput) {
+    return;
+  }
+
+  colorField = toneHint.parentNode;
+  presetField = presetRow.parentNode;
+  titleField = titleInput.parentNode;
+  descriptionField = descriptionInput.parentNode;
+  priceFieldWrapper = priceInput.parentNode;
+  commentRow = priceFieldWrapper && priceFieldWrapper.parentNode;
+
+  modeField = createElement("div", "field");
+  modeLabel = createElement("span", "field-label", "作り方");
+  modeRow = createElement("div", "template-mode-row");
+  modeRow.setAttribute("role", "group");
+  modeRow.setAttribute("aria-label", "作り方をえらぶ");
+
+  fixedButton = createElement("button", "mode-button is-active", "固定テンプレ");
+  fixedButton.type = "button";
+  fixedButton.setAttribute("data-template-mode", "fixed");
+  fixedButton.setAttribute("aria-pressed", "true");
+
+  freeButton = createElement("button", "mode-button", "自由に作る");
+  freeButton.type = "button";
+  freeButton.setAttribute("data-template-mode", "free");
+  freeButton.setAttribute("aria-pressed", "false");
+
+  templateModeNote = createElement("span", "field-note", "固定テンプレでは、今は価格だけ入れるテストだよ。");
+  templateModeNote.id = "templateModeNote";
+
+  modeRow.appendChild(fixedButton);
+  modeRow.appendChild(freeButton);
+  modeField.appendChild(modeLabel);
+  modeField.appendChild(modeRow);
+  modeField.appendChild(templateModeNote);
+  form.insertBefore(modeField, colorField.nextSibling);
+
+  priceField = createElement("label", "field");
+  priceField.id = "fixedPriceWrap";
+  priceLabel = createElement("span", "field-label", "価格");
+  fixedPriceInput = document.createElement("input");
+  fixedPriceInput.id = "fixedPriceInput";
+  fixedPriceInput.name = "fixedPrice";
+  fixedPriceInput.type = "text";
+  fixedPriceInput.setAttribute("inputmode", "decimal");
+  fixedPriceInput.setAttribute("maxlength", "16");
+  fixedPriceInput.setAttribute("autocomplete", "off");
+  fixedPriceInput.setAttribute("placeholder", "例：300円");
+  priceField.appendChild(priceLabel);
+  priceField.appendChild(fixedPriceInput);
+  form.insertBefore(priceField, commentRow.nextSibling);
+
+  templateModeButtons = [fixedButton, freeButton];
+  fixedPriceWrap = priceField;
+  freeFieldBlocks = [colorField, presetField, titleField, commentRow, descriptionField];
+}
+
+function setupPortraitOnlyUI() {
+  var orientationField;
+  var copiesField;
+
+  if (!orientationButtons.length) {
+    return;
+  }
+
+  orientationField = orientationButtons[0].parentNode && orientationButtons[0].parentNode.parentNode;
+  copiesField = orientationField && orientationField.parentNode ? orientationField.parentNode.lastElementChild : null;
+
+  if (orientationField) {
+    addClass(orientationField, "is-hidden");
+  }
+
+  if (copiesField) {
+    removeClass(copiesField, "field-half");
+    addClass(copiesField, "field-full");
+  }
+
+  if (displayFlipButton) {
+    displayFlipButton.style.display = "none";
+  }
+}
 
 function trimText(value) {
   return String(value || "").replace(/^\s+|\s+$/g, "");
@@ -190,9 +300,13 @@ function setDefaults() {
   commentInput.value = DEFAULT_FORM.comment;
   descriptionInput.value = DEFAULT_FORM.description;
   priceInput.value = DEFAULT_FORM.price;
+  if (fixedPriceInput) {
+    fixedPriceInput.value = DEFAULT_FORM.price;
+  }
   setColor(DEFAULT_FORM.color);
   copiesSelect.value = DEFAULT_FORM.copies;
   setRole(DEFAULT_FORM.role);
+  setTemplateMode(DEFAULT_FORM.templateMode);
   setOrientation(DEFAULT_FORM.orientation);
   setPreviewMode("display");
 }
@@ -218,6 +332,57 @@ function setRole(roleName) {
 
   syncRoleGuide();
   renderPresetButtons();
+}
+
+function getTemplateMode() {
+  return CURRENT_TEMPLATE_MODE || DEFAULT_FORM.templateMode;
+}
+
+function setTemplateMode(modeName) {
+  var i;
+  var isFixed = modeName === "fixed";
+
+  CURRENT_TEMPLATE_MODE = isFixed ? "fixed" : "free";
+
+  for (i = 0; i < templateModeButtons.length; i += 1) {
+    if (templateModeButtons[i].getAttribute("data-template-mode") === CURRENT_TEMPLATE_MODE) {
+      templateModeButtons[i].className = "mode-button is-active";
+      templateModeButtons[i].setAttribute("aria-pressed", "true");
+    } else {
+      templateModeButtons[i].className = "mode-button";
+      templateModeButtons[i].setAttribute("aria-pressed", "false");
+    }
+  }
+
+  for (i = 0; i < freeFieldBlocks.length; i += 1) {
+    if (isFixed) {
+      addClass(freeFieldBlocks[i], "is-hidden");
+    } else {
+      removeClass(freeFieldBlocks[i], "is-hidden");
+    }
+  }
+
+  if (fixedPriceWrap) {
+    if (isFixed) {
+      removeClass(fixedPriceWrap, "is-hidden");
+    } else {
+      addClass(fixedPriceWrap, "is-hidden");
+    }
+  }
+
+  if (templateModeNote) {
+    templateModeNote.textContent = isFixed
+      ? "固定テンプレでは、今は価格だけ入れるテストだよ。"
+      : "自由に作るでは、今までどおり文字を入れて作れるよ。";
+  }
+
+  if (fixedPriceInput && priceInput) {
+    if (isFixed) {
+      fixedPriceInput.value = priceInput.value;
+    } else {
+      priceInput.value = fixedPriceInput.value || priceInput.value;
+    }
+  }
 }
 
 function syncRoleGuide() {
@@ -294,20 +459,13 @@ function renderPresetButtons() {
 }
 
 function getOrientation() {
-  var i;
-
-  for (i = 0; i < orientationButtons.length; i += 1) {
-    if (orientationButtons[i].className.indexOf("is-active") !== -1) {
-      return orientationButtons[i].getAttribute("data-orientation");
-    }
-  }
-
-  return DEFAULT_FORM.orientation;
+  return "portrait";
 }
 
 function setOrientation(value) {
   var i;
-  var isLandscape = value === "landscape";
+  var isLandscape = false;
+  value = "portrait";
 
   for (i = 0; i < orientationButtons.length; i += 1) {
     if (orientationButtons[i].getAttribute("data-orientation") === value) {
@@ -325,11 +483,7 @@ function setOrientation(value) {
 }
 
 function flipOrientation() {
-  if (getOrientation() === "landscape") {
-    setOrientation("portrait");
-  } else {
-    setOrientation("landscape");
-  }
+  setOrientation("portrait");
 }
 
 function setPreviewMode(value) {
@@ -354,19 +508,24 @@ function setPreviewMode(value) {
     displayPreviewPanel.className = "preview-view";
     printPreviewPanel.className = "preview-view is-hidden";
   }
+
+  syncScreenSurfaceSizing();
 }
 
 function getFormData() {
   var roleName = getRole();
   var role = ROLE_MAP[roleName];
+  var templateMode = getTemplateMode();
+  var activePrice = templateMode === "fixed" && fixedPriceInput ? fixedPriceInput.value : priceInput.value;
 
   return {
     title: titleInput.value,
     comment: commentInput.value,
     description: descriptionInput.value,
-    price: priceInput.value,
+    price: activePrice,
     role: roleName,
     template: role.template,
+    templateMode: templateMode,
     color: colorSelect.value,
     copies: copiesSelect.value,
     orientation: getOrientation()
@@ -556,7 +715,55 @@ function getTemplateScalePreset(templateName) {
   };
 }
 
+function getFixedTemplatePriceText(roleName, priceText) {
+  var value = trimText(priceText);
+
+  if (!value) {
+    return roleName === "sale" ? "500円" : "300円";
+  }
+
+  if (roleName === "sale") {
+    value = value.replace(/^2つで\s*/g, "");
+  }
+
+  return value || "500円";
+}
+
+function buildFixedTemplateSurface(data, variant, isEmptySlot) {
+  var outer = createElement("article", "pop-surface pop-fixed-surface");
+  var image;
+  var overlay;
+  var price;
+  var priceText;
+
+  outer.className += " surface-" + variant + " fixed-role-" + data.role;
+
+  if (isEmptySlot) {
+    outer.className += " is-empty-slot";
+    outer.appendChild(createElement("p", "pop-empty screen-only", "ここは空きだよ"));
+    return outer;
+  }
+
+  image = document.createElement("img");
+  image.className = "fixed-template-image";
+  image.src = TEMPLATE_IMAGE_MAP[data.role];
+  image.alt = "";
+  outer.appendChild(image);
+
+  overlay = createElement("div", "fixed-overlay");
+  priceText = getFixedTemplatePriceText(data.role, data.price);
+  price = createElement("p", "fixed-price fixed-price-" + data.role, priceText);
+  overlay.appendChild(price);
+  outer.appendChild(overlay);
+
+  return outer;
+}
+
 function buildPopSurface(data, variant, isEmptySlot) {
+  if (data.templateMode === "fixed") {
+    return buildFixedTemplateSurface(data, variant, isEmptySlot);
+  }
+
   var outer = createElement("article", "pop-surface");
   var inner = createElement("div", "pop-surface__inner");
   var glowOne = createElement("div", "pop-glow pop-glow-one");
@@ -700,6 +907,7 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var widthScale;
   var heightScale;
   var scale;
+  var fixedPrice;
   var preset;
   var inner;
   var top;
@@ -717,6 +925,23 @@ function applyScreenSurfaceSizing(surface, orientation) {
   widthScale = surface.clientWidth / baseWidth;
   heightScale = surface.clientHeight / baseHeight;
   scale = Math.min(widthScale, heightScale);
+
+  if (hasClass(surface, "pop-fixed-surface")) {
+    fixedPrice = surface.getElementsByClassName("fixed-price")[0];
+
+    if (fixedPrice) {
+      if (hasClass(surface, "fixed-role-sale")) {
+        fixedPrice.style.fontSize = Math.max(30, Math.round(88 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-role-beside")) {
+        fixedPrice.style.fontSize = Math.max(20, Math.round(50 * scale)) + "px";
+      } else {
+        fixedPrice.style.fontSize = Math.max(20, Math.round(46 * scale)) + "px";
+      }
+    }
+
+    return;
+  }
+
   preset = getTemplateScalePreset(detectTemplateName(surface));
 
   inner = surface.getElementsByClassName("pop-surface__inner")[0];
@@ -771,9 +996,17 @@ function applyScreenSurfaceSizing(surface, orientation) {
 
 function syncScreenSurfaceSizing() {
   var orientation = getOrientation();
+  var surfaces;
+  var i;
 
   applyScreenSurfaceSizing(devicePreview.firstChild, orientation);
   applyScreenSurfaceSizing(fullDisplayWrap.firstChild, orientation);
+
+  surfaces = printSheet ? printSheet.getElementsByClassName("pop-surface") : [];
+
+  for (i = 0; i < surfaces.length; i += 1) {
+    applyScreenSurfaceSizing(surfaces[i], orientation);
+  }
 }
 
 function updateDisplayLayout() {
@@ -826,6 +1059,8 @@ function renderPrintSheet(data) {
     wrap.appendChild(buildPopSurface(data, "print", i >= copies));
     printSheet.appendChild(wrap);
   }
+
+  syncScreenSurfaceSizing();
 }
 
 function renderAll() {
@@ -974,6 +1209,17 @@ function bindPreviewButtons() {
   }
 }
 
+function bindTemplateModeButtons() {
+  var i;
+
+  for (i = 0; i < templateModeButtons.length; i += 1) {
+    templateModeButtons[i].addEventListener("click", function () {
+      setTemplateMode(this.getAttribute("data-template-mode"));
+      renderAll();
+    });
+  }
+}
+
 function bindPresetButtons() {
   presetRow.addEventListener("click", function (event) {
     var target = event.target || event.srcElement;
@@ -993,10 +1239,16 @@ colorSelect.addEventListener("change", function () {
   renderAll();
 });
 
+setupTemplateModeUI();
+setupPortraitOnlyUI();
+
 titleInput.addEventListener("input", renderAll);
 commentInput.addEventListener("input", renderAll);
 descriptionInput.addEventListener("input", renderAll);
 priceInput.addEventListener("input", renderAll);
+if (fixedPriceInput) {
+  fixedPriceInput.addEventListener("input", renderAll);
+}
 copiesSelect.addEventListener("change", renderAll);
 
 bindRoleButtons();
@@ -1004,6 +1256,7 @@ bindColorButtons();
 bindOrientationButtons();
 bindPreviewButtons();
 bindPresetButtons();
+bindTemplateModeButtons();
 displayStage.addEventListener("click", function () {
   toggleDisplayToolbar();
 });
