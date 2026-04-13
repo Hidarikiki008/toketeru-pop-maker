@@ -90,6 +90,7 @@ var TEMPLATE_IMAGE_MAP = {
   beside: "assets/templates/新しいアクセサリーコレクションの紹介.png",
   sale: "assets/templates/お得なアクセサリーキャンペーン.png"
 };
+var FIXED_STAGE_RATIO = 0.64;
 
 var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
@@ -727,6 +728,7 @@ function getFixedTemplatePriceText(roleName, priceText) {
 
 function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   var outer = createElement("article", "pop-surface pop-fixed-surface");
+  var stage;
   var image;
   var overlay;
   var price;
@@ -740,17 +742,19 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
     return outer;
   }
 
+  stage = createElement("div", "fixed-stage");
   image = document.createElement("img");
   image.className = "fixed-template-image";
   image.src = TEMPLATE_IMAGE_MAP[data.role];
   image.alt = "";
-  outer.appendChild(image);
+  stage.appendChild(image);
 
   overlay = createElement("div", "fixed-overlay");
   priceText = getFixedTemplatePriceText(data.role, data.price);
   price = createElement("p", "fixed-price fixed-price-" + data.role, priceText);
   overlay.appendChild(price);
-  outer.appendChild(overlay);
+  stage.appendChild(overlay);
+  outer.appendChild(stage);
 
   return outer;
 }
@@ -903,6 +907,11 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var widthScale;
   var heightScale;
   var scale;
+  var fixedStage;
+  var availableWidth;
+  var availableHeight;
+  var frameWidth;
+  var frameHeight;
   var fixedPrice;
   var preset;
   var inner;
@@ -923,7 +932,29 @@ function applyScreenSurfaceSizing(surface, orientation) {
   scale = Math.min(widthScale, heightScale);
 
   if (hasClass(surface, "pop-fixed-surface")) {
+    fixedStage = surface.getElementsByClassName("fixed-stage")[0];
     fixedPrice = surface.getElementsByClassName("fixed-price")[0];
+
+    if (fixedStage) {
+      availableWidth = surface.clientWidth * 0.9;
+      availableHeight = surface.clientHeight * 0.97;
+      frameHeight = availableHeight;
+      frameWidth = frameHeight * FIXED_STAGE_RATIO;
+
+      if (frameWidth > availableWidth) {
+        frameWidth = availableWidth;
+        frameHeight = frameWidth / FIXED_STAGE_RATIO;
+      }
+
+      fixedStage.style.width = Math.round(frameWidth) + "px";
+      fixedStage.style.height = Math.round(frameHeight) + "px";
+      fixedStage.style.left = Math.round((surface.clientWidth - frameWidth) / 2) + "px";
+      fixedStage.style.top = Math.round((surface.clientHeight - frameHeight) / 2) + "px";
+
+      widthScale = frameWidth / 576;
+      heightScale = frameHeight / 1024;
+      scale = Math.min(widthScale, heightScale);
+    }
 
     if (fixedPrice) {
       if (hasClass(surface, "fixed-role-sale")) {

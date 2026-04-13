@@ -738,6 +738,10 @@ button:focus {
   background: #fffdf9;
 }
 
+.fixed-stage {
+  position: absolute;
+}
+
 .fixed-template-image {
   position: absolute;
   top: 0;
