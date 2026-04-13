@@ -90,7 +90,7 @@ var TEMPLATE_IMAGE_MAP = {
   beside: "assets/templates/新しいアクセサリーコレクションの紹介.png",
   sale: "assets/templates/お得なアクセサリーキャンペーン.png"
 };
-var FIXED_STAGE_RATIO = 0.64;
+var FIXED_ART_RATIO = 576 / 1024;
 
 var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
@@ -729,6 +729,8 @@ function getFixedTemplatePriceText(roleName, priceText) {
 function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   var outer = createElement("article", "pop-surface pop-fixed-surface");
   var stage;
+  var artboard;
+  var backdrop;
   var image;
   var overlay;
   var price;
@@ -743,17 +745,25 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   }
 
   stage = createElement("div", "fixed-stage");
+  artboard = createElement("div", "fixed-artboard");
+  backdrop = document.createElement("img");
+  backdrop.className = "fixed-template-backdrop";
+  backdrop.src = TEMPLATE_IMAGE_MAP[data.role];
+  backdrop.alt = "";
+  stage.appendChild(backdrop);
+
   image = document.createElement("img");
   image.className = "fixed-template-image";
   image.src = TEMPLATE_IMAGE_MAP[data.role];
   image.alt = "";
-  stage.appendChild(image);
+  artboard.appendChild(image);
 
   overlay = createElement("div", "fixed-overlay");
   priceText = getFixedTemplatePriceText(data.role, data.price);
   price = createElement("p", "fixed-price fixed-price-" + data.role, priceText);
   overlay.appendChild(price);
-  stage.appendChild(overlay);
+  artboard.appendChild(overlay);
+  stage.appendChild(artboard);
   outer.appendChild(stage);
 
   return outer;
@@ -908,10 +918,13 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var heightScale;
   var scale;
   var fixedStage;
+  var fixedArtboard;
   var availableWidth;
   var availableHeight;
-  var frameWidth;
-  var frameHeight;
+  var stageWidth;
+  var stageHeight;
+  var artboardWidth;
+  var artboardHeight;
   var fixedPrice;
   var preset;
   var inner;
@@ -933,26 +946,36 @@ function applyScreenSurfaceSizing(surface, orientation) {
 
   if (hasClass(surface, "pop-fixed-surface")) {
     fixedStage = surface.getElementsByClassName("fixed-stage")[0];
+    fixedArtboard = surface.getElementsByClassName("fixed-artboard")[0];
     fixedPrice = surface.getElementsByClassName("fixed-price")[0];
 
     if (fixedStage) {
-      availableWidth = surface.clientWidth * 0.9;
-      availableHeight = surface.clientHeight * 0.97;
-      frameHeight = availableHeight;
-      frameWidth = frameHeight * FIXED_STAGE_RATIO;
+      stageWidth = surface.clientWidth * 0.965;
+      stageHeight = surface.clientHeight * 0.985;
+      fixedStage.style.width = Math.round(stageWidth) + "px";
+      fixedStage.style.height = Math.round(stageHeight) + "px";
+      fixedStage.style.left = Math.round((surface.clientWidth - stageWidth) / 2) + "px";
+      fixedStage.style.top = Math.round((surface.clientHeight - stageHeight) / 2) + "px";
+    }
 
-      if (frameWidth > availableWidth) {
-        frameWidth = availableWidth;
-        frameHeight = frameWidth / FIXED_STAGE_RATIO;
+    if (fixedArtboard) {
+      availableWidth = stageWidth * 0.93;
+      availableHeight = stageHeight * 0.975;
+      artboardHeight = availableHeight;
+      artboardWidth = artboardHeight * FIXED_ART_RATIO;
+
+      if (artboardWidth > availableWidth) {
+        artboardWidth = availableWidth;
+        artboardHeight = artboardWidth / FIXED_ART_RATIO;
       }
 
-      fixedStage.style.width = Math.round(frameWidth) + "px";
-      fixedStage.style.height = Math.round(frameHeight) + "px";
-      fixedStage.style.left = Math.round((surface.clientWidth - frameWidth) / 2) + "px";
-      fixedStage.style.top = Math.round((surface.clientHeight - frameHeight) / 2) + "px";
+      fixedArtboard.style.width = Math.round(artboardWidth) + "px";
+      fixedArtboard.style.height = Math.round(artboardHeight) + "px";
+      fixedArtboard.style.left = Math.round((stageWidth - artboardWidth) / 2) + "px";
+      fixedArtboard.style.top = Math.round((stageHeight - artboardHeight) / 2) + "px";
 
-      widthScale = frameWidth / 576;
-      heightScale = frameHeight / 1024;
+      widthScale = artboardWidth / 576;
+      heightScale = artboardHeight / 1024;
       scale = Math.min(widthScale, heightScale);
     }
 
