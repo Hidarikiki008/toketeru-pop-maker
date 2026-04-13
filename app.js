@@ -86,9 +86,9 @@ var DEFAULT_FORM = {
 };
 
 var TEMPLATE_IMAGE_MAP = {
-  attention: "assets/templates/template-a-fixed.png",
-  beside: "assets/templates/template-b-fixed.png",
-  sale: "assets/templates/template-c-fixed.png"
+  attention: "assets/templates/人気商品と手作りアクセサリー.png",
+  beside: "assets/templates/新しいアクセサリーコレクションの紹介.png",
+  sale: "assets/templates/お得なアクセサリーキャンペーン.png"
 };
 
 var PREVIEW_MODE = "display";
@@ -719,14 +719,10 @@ function getFixedTemplatePriceText(roleName, priceText) {
   var value = trimText(priceText);
 
   if (!value) {
-    return roleName === "sale" ? "500円" : "300円";
+    return "300円";
   }
 
-  if (roleName === "sale") {
-    value = value.replace(/^2つで\s*/g, "");
-  }
-
-  return value || "500円";
+  return value || "300円";
 }
 
 function buildFixedTemplateSurface(data, variant, isEmptySlot) {
@@ -931,11 +927,11 @@ function applyScreenSurfaceSizing(surface, orientation) {
 
     if (fixedPrice) {
       if (hasClass(surface, "fixed-role-sale")) {
-        fixedPrice.style.fontSize = Math.max(30, Math.round(88 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(34, Math.round(98 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-beside")) {
-        fixedPrice.style.fontSize = Math.max(20, Math.round(50 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(28, Math.round(74 * scale)) + "px";
       } else {
-        fixedPrice.style.fontSize = Math.max(20, Math.round(46 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(28, Math.round(76 * scale)) + "px";
       }
     }
 
