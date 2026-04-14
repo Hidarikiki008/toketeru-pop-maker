@@ -77,7 +77,7 @@ var DEFAULT_FORM = {
   title: "人気商品🐱",
   comment: "手作りクッキー🍪",
   description: "サクサクこうばしい人気味☀️",
-  price: "300円",
+  price: "1500円",
   role: "beside",
   color: "orange",
   copies: "4",
@@ -85,16 +85,34 @@ var DEFAULT_FORM = {
   orientation: "portrait"
 };
 
-var TEMPLATE_IMAGE_MAP = {
-  attention: "assets/templates/人気商品と手作りアクセサリー.png",
-  beside: "assets/templates/新しいアクセサリーコレクションの紹介.png",
-  sale: "assets/templates/お得なアクセサリーキャンペーン.png"
-};
 var FIXED_ART_RATIO = 576 / 1024;
+var FIXED_TEMPLATE_OPTIONS = {
+  popular: { label: "人気商品", image: "assets/templates/人気商品と手作りアクセサリー.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  fresh: { label: "新商品", image: "assets/templates/新しいアクセサリーコレクションの紹介.png", role: "beside", baseWidth: 1024, baseHeight: 1536 },
+  bargain: { label: "お買い得", image: "assets/templates/お得なアクセサリーキャンペーン.png", role: "sale", baseWidth: 1024, baseHeight: 1536 },
+  figmaAttention: { label: "FigmaA 遠く用", image: "assets/templates/文字テンプレート/テンプレA_遠くで止める.png", role: "attention", baseWidth: 720, baseHeight: 960 },
+  figmaBeside: { label: "FigmaB 商品横", image: "assets/templates/文字テンプレート/テンプレB_商品の横で伝える.png", role: "beside", baseWidth: 720, baseHeight: 960 },
+  figmaSale: { label: "FigmaC セール", image: "assets/templates/文字テンプレート/テンプレC_セールで押す.png", role: "sale", baseWidth: 720, baseHeight: 960 },
+  spring: { label: "春限定", image: "assets/templates/春夏秋冬/春限定のアクセサリープロモーション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  summer: { label: "夏限定", image: "assets/templates/春夏秋冬/夏限定ジュエリーデザイン.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  autumn: { label: "秋限定", image: "assets/templates/春夏秋冬/秋限定アクセサリーの魅力.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  winter: { label: "冬限定", image: "assets/templates/春夏秋冬/冬限定アクセサリーコレクション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 }
+};
+var FIXED_TEMPLATE_GROUPS = [
+  { title: "定番テンプレ", items: ["popular", "fresh", "bargain"] },
+  { title: "Figmaテンプレ", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
+  { title: "季節テンプレ", items: ["spring", "summer", "autumn", "winter"] }
+];
+var ROLE_DEFAULT_FIXED_TEMPLATE = {
+  attention: "popular",
+  beside: "fresh",
+  sale: "bargain"
+};
 
 var PREVIEW_MODE = "display";
 var CURRENT_ROLE = DEFAULT_FORM.role;
 var CURRENT_TEMPLATE_MODE = DEFAULT_FORM.templateMode;
+var CURRENT_FIXED_TEMPLATE = ROLE_DEFAULT_FIXED_TEMPLATE[DEFAULT_FORM.role] || "fresh";
 var EMOJI_PATTERN = /([\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]))/g;
 var TRAILING_EMOJI_PATTERN = /((?:\s*(?:[\u2600-\u27BF]|(?:[\uD83C-\uDBFF][\uDC00-\uDFFF])))+)$/;
 
@@ -139,10 +157,21 @@ var displayFlipButton = document.getElementById("displayFlipButton");
 var displayPrintButton = document.getElementById("displayPrintButton");
 var fullDisplayWrap = document.getElementById("fullDisplayWrap");
 var displayHideTimer = null;
+var displaySlideButton = null;
+var slideshowTimer = null;
+var slideshowTemplateIds = [];
+var slideshowIndex = 0;
+var currentSlideshowTemplateId = null;
 var templateModeButtons = [];
 var templateModeNote = null;
 var fixedPriceWrap = null;
 var fixedPriceInput = null;
+var fixedTemplateWrap = null;
+var fixedTemplateButtons = [];
+var fixedTemplateToggleButtons = [];
+var slideshowWrap = null;
+var slideshowToggle = null;
+var slideshowCard = null;
 var freeFieldBlocks = [];
 
 function setupTemplateModeUI() {
@@ -153,12 +182,31 @@ function setupTemplateModeUI() {
   var freeButton;
   var priceField;
   var priceLabel;
+  var templateField;
+  var templateLabel;
+  var templateGroup;
+  var templateGroupTitle;
+  var templateRow;
+  var templateCard;
+  var templateButton;
+  var templateThumb;
+  var templateName;
+  var templateMeta;
+  var templateToggleButton;
+  var slideField;
+  var slideLabel;
+  var slideInner;
+  var slideText;
   var priceFieldWrapper;
   var colorField;
   var presetField;
   var titleField;
   var descriptionField;
   var commentRow;
+  var groupIndex;
+  var itemIndex;
+  var groupConfig;
+  var templateId;
 
   if (!form || !toneHint || !presetRow || !titleInput || !descriptionInput || !priceInput) {
     return;
@@ -212,6 +260,70 @@ function setupTemplateModeUI() {
   priceField.appendChild(fixedPriceInput);
   form.insertBefore(priceField, commentRow.nextSibling);
 
+  templateField = createElement("div", "field");
+  templateLabel = createElement("span", "field-label", "テンプレを選ぶ");
+  templateField.appendChild(templateLabel);
+
+  for (groupIndex = 0; groupIndex < FIXED_TEMPLATE_GROUPS.length; groupIndex += 1) {
+    groupConfig = FIXED_TEMPLATE_GROUPS[groupIndex];
+    templateGroup = createElement("div", "fixed-template-group");
+    templateGroupTitle = createElement("p", "fixed-template-group-title", groupConfig.title);
+    templateRow = createElement("div", "fixed-template-grid");
+    templateGroup.appendChild(templateGroupTitle);
+    templateGroup.appendChild(templateRow);
+
+    for (itemIndex = 0; itemIndex < groupConfig.items.length; itemIndex += 1) {
+      templateId = groupConfig.items[itemIndex];
+      templateCard = createElement("div", "fixed-template-card");
+      templateButton = createElement("button", "fixed-template-button");
+      templateButton.type = "button";
+      templateButton.setAttribute("data-fixed-template", templateId);
+      templateButton.setAttribute("aria-pressed", "false");
+      templateThumb = document.createElement("img");
+      templateThumb.className = "fixed-template-thumb";
+      templateThumb.src = FIXED_TEMPLATE_OPTIONS[templateId].image;
+      templateThumb.alt = FIXED_TEMPLATE_OPTIONS[templateId].label;
+      templateName = createElement("span", "fixed-template-button-label", FIXED_TEMPLATE_OPTIONS[templateId].label);
+      templateMeta = createElement("span", "fixed-template-button-meta", ROLE_MAP[FIXED_TEMPLATE_OPTIONS[templateId].role].tipLabel);
+      templateButton.appendChild(templateThumb);
+      templateButton.appendChild(templateName);
+      templateButton.appendChild(templateMeta);
+      templateCard.appendChild(templateButton);
+      fixedTemplateButtons.push(templateButton);
+
+      templateToggleButton = createElement("button", "fixed-template-toggle", "紙芝居に入れる");
+      templateToggleButton.type = "button";
+      templateToggleButton.setAttribute("data-slideshow-template", templateId);
+      templateToggleButton.setAttribute("aria-pressed", "false");
+      templateCard.appendChild(templateToggleButton);
+      fixedTemplateToggleButtons.push(templateToggleButton);
+
+      templateRow.appendChild(templateCard);
+    }
+
+    templateField.appendChild(templateGroup);
+  }
+
+  form.insertBefore(templateField, priceField.nextSibling);
+  fixedTemplateWrap = templateField;
+
+  slideField = createElement("div", "field");
+  slideField.id = "slideshowWrap";
+  slideLabel = createElement("span", "field-label", "表示のしかた");
+  slideInner = createElement("div", "slideshow-card");
+  slideshowToggle = document.createElement("input");
+  slideshowToggle.type = "checkbox";
+  slideshowToggle.id = "slideshowToggle";
+  slideText = createElement("span", "slideshow-card-text", "紙芝居で順番に見せる");
+  slideInner.appendChild(slideshowToggle);
+  slideInner.appendChild(slideText);
+  slideField.appendChild(slideLabel);
+  slideField.appendChild(slideInner);
+  slideField.appendChild(createElement("span", "field-note", "大きく表示で約4秒ごとにテンプレが切り替わるよ。"));
+  form.insertBefore(slideField, templateField.nextSibling);
+  slideshowWrap = slideField;
+  slideshowCard = slideInner;
+
   templateModeButtons = [fixedButton, freeButton];
   fixedPriceWrap = priceField;
   freeFieldBlocks = [colorField, presetField, titleField, commentRow, descriptionField];
@@ -240,6 +352,16 @@ function setupPortraitOnlyUI() {
   if (displayFlipButton) {
     displayFlipButton.style.display = "none";
   }
+}
+
+function setupDisplayToolbarUI() {
+  if (!displayToolbar || !displayPrintButton || displaySlideButton) {
+    return;
+  }
+
+  displaySlideButton = createElement("button", "display-tool-button", "紙芝居で見る");
+  displaySlideButton.type = "button";
+  displayPrintButton.parentNode.insertBefore(displaySlideButton, displayPrintButton);
 }
 
 function trimText(value) {
@@ -297,6 +419,8 @@ function findTargetWithAttribute(startNode, attributeName, stopNode) {
 }
 
 function setDefaults() {
+  var i;
+
   titleInput.value = DEFAULT_FORM.title;
   commentInput.value = DEFAULT_FORM.comment;
   descriptionInput.value = DEFAULT_FORM.description;
@@ -304,9 +428,19 @@ function setDefaults() {
   if (fixedPriceInput) {
     fixedPriceInput.value = DEFAULT_FORM.price;
   }
+  if (slideshowToggle) {
+    slideshowToggle.checked = false;
+  }
+  for (i = 0; i < fixedTemplateToggleButtons.length; i += 1) {
+    fixedTemplateToggleButtons[i].className = "fixed-template-toggle";
+    fixedTemplateToggleButtons[i].textContent = "紙芝居に入れる";
+    fixedTemplateToggleButtons[i].setAttribute("aria-pressed", "false");
+  }
   setColor(DEFAULT_FORM.color);
   copiesSelect.value = DEFAULT_FORM.copies;
   setRole(DEFAULT_FORM.role);
+  setFixedTemplate(ROLE_DEFAULT_FIXED_TEMPLATE[DEFAULT_FORM.role] || "fresh", true);
+  setSlideshowTemplateIncluded(ROLE_DEFAULT_FIXED_TEMPLATE[DEFAULT_FORM.role] || "fresh", true);
   setTemplateMode(DEFAULT_FORM.templateMode);
   setOrientation(DEFAULT_FORM.orientation);
   setPreviewMode("display");
@@ -335,8 +469,89 @@ function setRole(roleName) {
   renderPresetButtons();
 }
 
+function findFixedTemplateForRole(roleName) {
+  var i;
+  var templateId;
+
+  for (i = 0; i < FIXED_TEMPLATE_GROUPS.length; i += 1) {
+    if (FIXED_TEMPLATE_GROUPS[i]) {
+      for (templateId = 0; templateId < FIXED_TEMPLATE_GROUPS[i].items.length; templateId += 1) {
+        if (FIXED_TEMPLATE_OPTIONS[FIXED_TEMPLATE_GROUPS[i].items[templateId]].role === roleName) {
+          return FIXED_TEMPLATE_GROUPS[i].items[templateId];
+        }
+      }
+    }
+  }
+
+  return ROLE_DEFAULT_FIXED_TEMPLATE[roleName] || "fresh";
+}
+
 function getTemplateMode() {
   return CURRENT_TEMPLATE_MODE || DEFAULT_FORM.templateMode;
+}
+
+function getFixedTemplateId() {
+  return CURRENT_FIXED_TEMPLATE;
+}
+
+function getSelectedSlideshowTemplateIds() {
+  var ids = [];
+  var i;
+  var templateId;
+
+  for (i = 0; i < fixedTemplateToggleButtons.length; i += 1) {
+    if (hasClass(fixedTemplateToggleButtons[i], "is-active")) {
+      templateId = fixedTemplateToggleButtons[i].getAttribute("data-slideshow-template");
+      if (templateId) {
+        ids.push(templateId);
+      }
+    }
+  }
+
+  return ids;
+}
+
+function setSlideshowTemplateIncluded(templateId, included) {
+  var i;
+
+  for (i = 0; i < fixedTemplateToggleButtons.length; i += 1) {
+    if (fixedTemplateToggleButtons[i].getAttribute("data-slideshow-template") === templateId) {
+      if (included) {
+        fixedTemplateToggleButtons[i].className = "fixed-template-toggle is-active";
+        fixedTemplateToggleButtons[i].textContent = "紙芝居から外す";
+        fixedTemplateToggleButtons[i].setAttribute("aria-pressed", "true");
+      } else {
+        fixedTemplateToggleButtons[i].className = "fixed-template-toggle";
+        fixedTemplateToggleButtons[i].textContent = "紙芝居に入れる";
+        fixedTemplateToggleButtons[i].setAttribute("aria-pressed", "false");
+      }
+    }
+  }
+}
+
+function setFixedTemplate(templateId, syncRole) {
+  var i;
+  var config = FIXED_TEMPLATE_OPTIONS[templateId];
+
+  if (!config) {
+    return;
+  }
+
+  CURRENT_FIXED_TEMPLATE = templateId;
+
+  for (i = 0; i < fixedTemplateButtons.length; i += 1) {
+    if (fixedTemplateButtons[i].getAttribute("data-fixed-template") === templateId) {
+      fixedTemplateButtons[i].className = "fixed-template-button is-active";
+      fixedTemplateButtons[i].setAttribute("aria-pressed", "true");
+    } else {
+      fixedTemplateButtons[i].className = "fixed-template-button";
+      fixedTemplateButtons[i].setAttribute("aria-pressed", "false");
+    }
+  }
+
+  if (syncRole !== false) {
+    setRole(config.role);
+  }
 }
 
 function setTemplateMode(modeName) {
@@ -371,6 +586,22 @@ function setTemplateMode(modeName) {
     }
   }
 
+  if (fixedTemplateWrap) {
+    if (isFixed) {
+      removeClass(fixedTemplateWrap, "is-hidden");
+    } else {
+      addClass(fixedTemplateWrap, "is-hidden");
+    }
+  }
+
+  if (slideshowWrap) {
+    if (isFixed) {
+      removeClass(slideshowWrap, "is-hidden");
+    } else {
+      addClass(slideshowWrap, "is-hidden");
+    }
+  }
+
   if (templateModeNote) {
     templateModeNote.textContent = isFixed
       ? "固定テンプレでは、今は価格だけ入れるテストだよ。"
@@ -383,6 +614,12 @@ function setTemplateMode(modeName) {
     } else {
       priceInput.value = fixedPriceInput.value || priceInput.value;
     }
+  }
+
+  if (isFixed) {
+    setFixedTemplate(getFixedTemplateId(), true);
+  } else {
+    stopSlideshow();
   }
 }
 
@@ -527,6 +764,8 @@ function getFormData() {
     role: roleName,
     template: role.template,
     templateMode: templateMode,
+    fixedTemplate: getFixedTemplateId(),
+    slideshow: !!(slideshowToggle && slideshowToggle.checked),
     color: colorSelect.value,
     copies: copiesSelect.value,
     orientation: getOrientation()
@@ -735,8 +974,9 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   var overlay;
   var price;
   var priceText;
+  var templateConfig = FIXED_TEMPLATE_OPTIONS[data.fixedTemplate] || FIXED_TEMPLATE_OPTIONS.fresh;
 
-  outer.className += " surface-" + variant + " fixed-role-" + data.role;
+  outer.className += " surface-" + variant + " fixed-role-" + templateConfig.role + " fixed-template-" + data.fixedTemplate;
 
   if (isEmptySlot) {
     outer.className += " is-empty-slot";
@@ -748,13 +988,13 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   artboard = createElement("div", "fixed-artboard");
   backdrop = document.createElement("img");
   backdrop.className = "fixed-template-backdrop";
-  backdrop.src = TEMPLATE_IMAGE_MAP[data.role];
+  backdrop.src = templateConfig.image;
   backdrop.alt = "";
   stage.appendChild(backdrop);
 
   image = document.createElement("img");
   image.className = "fixed-template-image";
-  image.src = TEMPLATE_IMAGE_MAP[data.role];
+  image.src = templateConfig.image;
   image.alt = "";
   artboard.appendChild(image);
 
@@ -764,6 +1004,7 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   overlay.appendChild(price);
   artboard.appendChild(overlay);
   stage.appendChild(artboard);
+  outer.setAttribute("data-fixed-template", data.fixedTemplate || "");
   outer.appendChild(stage);
 
   return outer;
@@ -917,6 +1158,9 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var widthScale;
   var heightScale;
   var scale;
+  var fixedTemplateId;
+  var fixedConfig;
+  var artRatio;
   var fixedStage;
   var fixedArtboard;
   var availableWidth;
@@ -945,6 +1189,9 @@ function applyScreenSurfaceSizing(surface, orientation) {
   scale = Math.min(widthScale, heightScale);
 
   if (hasClass(surface, "pop-fixed-surface")) {
+    fixedTemplateId = surface.getAttribute("data-fixed-template") || "";
+    fixedConfig = FIXED_TEMPLATE_OPTIONS[fixedTemplateId] || null;
+    artRatio = fixedConfig ? (fixedConfig.baseWidth / fixedConfig.baseHeight) : FIXED_ART_RATIO;
     fixedStage = surface.getElementsByClassName("fixed-stage")[0];
     fixedArtboard = surface.getElementsByClassName("fixed-artboard")[0];
     fixedPrice = surface.getElementsByClassName("fixed-price")[0];
@@ -962,11 +1209,11 @@ function applyScreenSurfaceSizing(surface, orientation) {
       availableWidth = stageWidth * 0.93;
       availableHeight = stageHeight * 0.975;
       artboardHeight = availableHeight;
-      artboardWidth = artboardHeight * FIXED_ART_RATIO;
+      artboardWidth = artboardHeight * artRatio;
 
       if (artboardWidth > availableWidth) {
         artboardWidth = availableWidth;
-        artboardHeight = artboardWidth / FIXED_ART_RATIO;
+        artboardHeight = artboardWidth / artRatio;
       }
 
       fixedArtboard.style.width = Math.round(artboardWidth) + "px";
@@ -974,13 +1221,19 @@ function applyScreenSurfaceSizing(surface, orientation) {
       fixedArtboard.style.left = Math.round((stageWidth - artboardWidth) / 2) + "px";
       fixedArtboard.style.top = Math.round((stageHeight - artboardHeight) / 2) + "px";
 
-      widthScale = artboardWidth / 576;
-      heightScale = artboardHeight / 1024;
+      widthScale = artboardWidth / (fixedConfig ? fixedConfig.baseWidth : 576);
+      heightScale = artboardHeight / (fixedConfig ? fixedConfig.baseHeight : 1024);
       scale = Math.min(widthScale, heightScale);
     }
 
     if (fixedPrice) {
-      if (hasClass(surface, "fixed-role-sale")) {
+      if (hasClass(surface, "fixed-template-figmaSale")) {
+        fixedPrice.style.fontSize = Math.max(30, Math.round(72 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-template-figmaAttention")) {
+        fixedPrice.style.fontSize = Math.max(24, Math.round(54 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-template-figmaBeside")) {
+        fixedPrice.style.fontSize = Math.max(26, Math.round(58 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-role-sale")) {
         fixedPrice.style.fontSize = Math.max(34, Math.round(98 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-beside")) {
         fixedPrice.style.fontSize = Math.max(28, Math.round(74 * scale)) + "px";
@@ -1062,17 +1315,11 @@ function syncScreenSurfaceSizing() {
 function updateDisplayLayout() {
   var orientation = getOrientation();
   var previewWidth = deviceStage.clientWidth - 36;
-  var previewHeight = deviceStage.clientHeight - 36;
+  var previewHeight = window.innerWidth <= 720
+    ? (orientation === "landscape" ? 250 : 336)
+    : (orientation === "landscape" ? 450 : 520);
   var fullWidth = displayStage.clientWidth - 32;
   var fullHeight = displayStage.clientHeight - 32;
-
-  if (orientation === "landscape") {
-    if (previewHeight > 450) {
-      previewHeight = 450;
-    }
-  } else if (previewHeight > 520) {
-    previewHeight = 520;
-  }
 
   sizeBox(deviceShell, previewWidth, previewHeight, orientation);
   sizeBox(fullDisplayWrap, fullWidth, fullHeight, orientation);
@@ -1082,6 +1329,24 @@ function updateDisplayLayout() {
 function renderDevicePreview(data) {
   clearChildren(devicePreview);
   devicePreview.appendChild(buildPopSurface(data, "device", false));
+}
+
+function cloneDataWithFixedTemplate(data, templateId) {
+  var clone = {};
+  var key;
+  var config = FIXED_TEMPLATE_OPTIONS[templateId] || FIXED_TEMPLATE_OPTIONS.fresh;
+
+  for (key in data) {
+    if (data.hasOwnProperty(key)) {
+      clone[key] = data[key];
+    }
+  }
+
+  clone.fixedTemplate = templateId;
+  clone.role = config.role;
+  clone.template = ROLE_MAP[config.role].template;
+
+  return clone;
 }
 
 function renderFullDisplay(data) {
@@ -1118,9 +1383,14 @@ function renderAll() {
 
   setOrientation(data.orientation);
   renderDevicePreview(data);
-  renderFullDisplay(data);
-  renderPrintSheet(data);
+  if (!isSlideshowActive()) {
+    renderFullDisplay(data);
+  }
+  if (PREVIEW_MODE === "print") {
+    renderPrintSheet(data);
+  }
   updateDisplayLayout();
+  syncSlideshowState();
 }
 
 function resetForm() {
@@ -1138,10 +1408,12 @@ function openDisplayMode() {
   removeClass(displayMode, "is-hidden");
   removeClass(displayMode, "is-toolbar-hidden");
   updateDisplayLayout();
+  syncSlideshowState();
   scheduleDisplayToolbarHide();
 }
 
 function closeDisplayMode() {
+  stopSlideshow();
   clearDisplayToolbarTimer();
   removeClass(document.body, "is-display-mode");
   removeClass(displayMode, "is-toolbar-hidden");
@@ -1179,6 +1451,100 @@ function toggleDisplayToolbar() {
     clearDisplayToolbarTimer();
     addClass(displayMode, "is-toolbar-hidden");
   }
+}
+
+function isSlideshowActive() {
+  return !!(slideshowToggle && slideshowToggle.checked && getTemplateMode() === "fixed" && !hasClass(displayMode, "is-hidden") && getSelectedSlideshowTemplateIds().length);
+}
+
+function clearSlideshowTimer() {
+  if (slideshowTimer) {
+    clearTimeout(slideshowTimer);
+    slideshowTimer = null;
+  }
+}
+
+function getSlideshowTemplateIds() {
+  return getSelectedSlideshowTemplateIds();
+}
+
+function updateDisplaySlideButton() {
+  if (!displaySlideButton) {
+    return;
+  }
+
+  displaySlideButton.textContent = isSlideshowActive() ? "紙芝居を止める" : "紙芝居で見る";
+}
+
+function stopSlideshow() {
+  var data;
+
+  clearSlideshowTimer();
+  slideshowTemplateIds = [];
+  slideshowIndex = 0;
+  if (!hasClass(displayMode, "is-hidden")) {
+    data = getFormData();
+    if (currentSlideshowTemplateId && FIXED_TEMPLATE_OPTIONS[currentSlideshowTemplateId]) {
+      setFixedTemplate(currentSlideshowTemplateId, true);
+      data = cloneDataWithFixedTemplate(data, currentSlideshowTemplateId);
+    }
+    renderFullDisplay(data);
+    updateDisplayLayout();
+  }
+  updateDisplaySlideButton();
+}
+
+function renderSlideshowFrame(data) {
+  var templateId;
+
+  if (!slideshowTemplateIds.length) {
+    return;
+  }
+
+  templateId = slideshowTemplateIds[slideshowIndex] || getFixedTemplateId();
+  currentSlideshowTemplateId = templateId;
+  renderFullDisplay(cloneDataWithFixedTemplate(data, templateId));
+  updateDisplayLayout();
+}
+
+function scheduleSlideshowFrame(data) {
+  clearSlideshowTimer();
+  if (!isSlideshowActive()) {
+    return;
+  }
+
+  slideshowTimer = setTimeout(function () {
+    slideshowIndex = (slideshowIndex + 1) % slideshowTemplateIds.length;
+    renderSlideshowFrame(data);
+    scheduleSlideshowFrame(data);
+  }, 4000);
+}
+
+function syncSlideshowState() {
+  var data = getFormData();
+  var selectedId;
+
+  updateDisplaySlideButton();
+
+  if (!isSlideshowActive()) {
+    stopSlideshow();
+    return;
+  }
+
+  slideshowTemplateIds = getSlideshowTemplateIds();
+  selectedId = getFixedTemplateId();
+  slideshowIndex = 0;
+
+  while (slideshowIndex < slideshowTemplateIds.length && slideshowTemplateIds[slideshowIndex] !== selectedId) {
+    slideshowIndex += 1;
+  }
+
+  if (slideshowIndex >= slideshowTemplateIds.length) {
+    slideshowIndex = 0;
+  }
+
+  renderSlideshowFrame(data);
+  scheduleSlideshowFrame(data);
 }
 
 updateButton.addEventListener("click", renderAll);
@@ -1230,7 +1596,11 @@ function bindRoleButtons() {
 
   for (i = 0; i < roleButtons.length; i += 1) {
     roleButtons[i].addEventListener("click", function () {
-      setRole(this.getAttribute("data-role"));
+      if (getTemplateMode() === "fixed") {
+        setFixedTemplate(findFixedTemplateForRole(this.getAttribute("data-role")), true);
+      } else {
+        setRole(this.getAttribute("data-role"));
+      }
       renderAll();
     });
   }
@@ -1255,6 +1625,7 @@ function bindPreviewButtons() {
   for (i = 0; i < previewButtons.length; i += 1) {
     previewButtons[i].addEventListener("click", function () {
       setPreviewMode(this.getAttribute("data-preview"));
+      renderAll();
     });
   }
 }
@@ -1266,6 +1637,32 @@ function bindTemplateModeButtons() {
     templateModeButtons[i].addEventListener("click", function () {
       setTemplateMode(this.getAttribute("data-template-mode"));
       renderAll();
+    });
+  }
+}
+
+function bindFixedTemplateButtons() {
+  var i;
+
+  for (i = 0; i < fixedTemplateButtons.length; i += 1) {
+    fixedTemplateButtons[i].addEventListener("click", function () {
+      setFixedTemplate(this.getAttribute("data-fixed-template"), true);
+      renderAll();
+    });
+  }
+}
+
+function bindFixedTemplateToggleButtons() {
+  var i;
+
+  for (i = 0; i < fixedTemplateToggleButtons.length; i += 1) {
+    fixedTemplateToggleButtons[i].addEventListener("click", function () {
+      if (hasClass(this, "is-active")) {
+        setSlideshowTemplateIncluded(this.getAttribute("data-slideshow-template"), false);
+      } else {
+        setSlideshowTemplateIncluded(this.getAttribute("data-slideshow-template"), true);
+      }
+      syncSlideshowState();
     });
   }
 }
@@ -1291,6 +1688,7 @@ colorSelect.addEventListener("change", function () {
 
 setupTemplateModeUI();
 setupPortraitOnlyUI();
+setupDisplayToolbarUI();
 
 titleInput.addEventListener("input", renderAll);
 commentInput.addEventListener("input", renderAll);
@@ -1298,6 +1696,23 @@ descriptionInput.addEventListener("input", renderAll);
 priceInput.addEventListener("input", renderAll);
 if (fixedPriceInput) {
   fixedPriceInput.addEventListener("input", renderAll);
+}
+if (slideshowToggle) {
+  slideshowToggle.addEventListener("change", function () {
+    syncSlideshowState();
+  });
+}
+if (slideshowCard) {
+  slideshowCard.addEventListener("click", function (event) {
+    var target = event.target || event.srcElement;
+
+    if (!slideshowToggle || target === slideshowToggle) {
+      return;
+    }
+
+    slideshowToggle.checked = !slideshowToggle.checked;
+    syncSlideshowState();
+  });
 }
 copiesSelect.addEventListener("change", renderAll);
 
@@ -1307,6 +1722,8 @@ bindOrientationButtons();
 bindPreviewButtons();
 bindPresetButtons();
 bindTemplateModeButtons();
+bindFixedTemplateButtons();
+bindFixedTemplateToggleButtons();
 displayStage.addEventListener("click", function () {
   toggleDisplayToolbar();
 });
@@ -1317,6 +1734,17 @@ displayToolbar.addEventListener("click", function (event) {
 
   showDisplayToolbar();
 });
+if (displaySlideButton) {
+  displaySlideButton.addEventListener("click", function () {
+    if (!slideshowToggle) {
+      return;
+    }
+
+    slideshowToggle.checked = !slideshowToggle.checked;
+    syncSlideshowState();
+    showDisplayToolbar();
+  });
+}
 window.addEventListener("resize", updateDisplayLayout);
 setDefaults();
 renderAll();
