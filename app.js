@@ -87,12 +87,12 @@ var DEFAULT_FORM = {
 
 var FIXED_ART_RATIO = 576 / 1024;
 var FIXED_TEMPLATE_OPTIONS = {
-  popular: { label: "人気商品", image: "assets/templates/人気商品と手作りアクセサリー.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
-  fresh: { label: "新商品", image: "assets/templates/新しいアクセサリーコレクションの紹介.png", role: "beside", baseWidth: 1024, baseHeight: 1536 },
-  bargain: { label: "お買い得", image: "assets/templates/お得なアクセサリーキャンペーン.png", role: "sale", baseWidth: 1024, baseHeight: 1536 },
-  figmaAttention: { label: "FigmaA 遠く用", image: "assets/templates/文字テンプレート/テンプレA_遠くで止める.png", role: "attention", baseWidth: 720, baseHeight: 960 },
-  figmaBeside: { label: "FigmaB 商品横", image: "assets/templates/文字テンプレート/テンプレB_商品の横で伝える.png", role: "beside", baseWidth: 720, baseHeight: 960 },
-  figmaSale: { label: "FigmaC セール", image: "assets/templates/文字テンプレート/テンプレC_セールで押す.png", role: "sale", baseWidth: 720, baseHeight: 960 },
+  popular: { label: "人気商品", image: "assets/templates/基本/人気商品と手作りアクセサリー.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  fresh: { label: "新商品", image: "assets/templates/基本/新しいアクセサリーコレクションの紹介.png", role: "beside", baseWidth: 1024, baseHeight: 1536 },
+  bargain: { label: "お買い得", image: "assets/templates/基本/お得なアクセサリーキャンペーン.png", role: "sale", baseWidth: 1024, baseHeight: 1536 },
+  figmaAttention: { label: "テンプレA 遠く用", image: "assets/templates/文字テンプレート/テンプレA_遠くで止める.png", role: "attention", baseWidth: 720, baseHeight: 960 },
+  figmaBeside: { label: "テンプレB 商品横", image: "assets/templates/文字テンプレート/テンプレB_商品の横で伝える.png", role: "beside", baseWidth: 720, baseHeight: 960 },
+  figmaSale: { label: "テンプレC セール", image: "assets/templates/文字テンプレート/テンプレC_セールで押す.png", role: "sale", baseWidth: 720, baseHeight: 960 },
   spring: { label: "春限定", image: "assets/templates/春夏秋冬/春限定のアクセサリープロモーション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
   summer: { label: "夏限定", image: "assets/templates/春夏秋冬/夏限定ジュエリーデザイン.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
   autumn: { label: "秋限定", image: "assets/templates/春夏秋冬/秋限定アクセサリーの魅力.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
@@ -100,7 +100,7 @@ var FIXED_TEMPLATE_OPTIONS = {
 };
 var FIXED_TEMPLATE_GROUPS = [
   { title: "定番テンプレ", items: ["popular", "fresh", "bargain"] },
-  { title: "Figmaテンプレ", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
+  { title: "文字テンプレ", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
   { title: "季節テンプレ", items: ["spring", "summer", "autumn", "winter"] }
 ];
 var ROLE_DEFAULT_FIXED_TEMPLATE = {
