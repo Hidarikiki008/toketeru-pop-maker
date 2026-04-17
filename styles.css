@@ -914,9 +914,9 @@ button:focus {
   width: 66%;
   font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
   font-weight: 900;
-  white-space: nowrap;
+  white-space: pre-line;
   letter-spacing: 0.01em;
-  line-height: 1;
+  line-height: 0.92;
   text-align: center;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
 }
@@ -990,6 +990,31 @@ button:focus {
 .fixed-template-winter .fixed-price {
   color: #5d88c9;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.fixed-template-pencilLimited .fixed-price {
+  top: 57.0%;
+  left: 50%;
+  width: 44%;
+  color: #d06f84;
+  transform: translate(-50%, -50%);
+}
+
+.fixed-template-pencilHandmade .fixed-price {
+  top: 57.0%;
+  left: 50%;
+  width: 44%;
+  color: #b77556;
+  transform: translate(-50%, -50%);
+}
+
+.fixed-template-pencilBundle .fixed-price {
+  top: 56.5%;
+  left: 50%;
+  width: 46%;
+  color: #d06f84;
+  line-height: 0.86;
+  transform: translate(-50%, -50%);
 }
 
 .pop-surface__inner {

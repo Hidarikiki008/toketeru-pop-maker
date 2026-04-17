@@ -96,12 +96,16 @@ var FIXED_TEMPLATE_OPTIONS = {
   spring: { label: "春限定", image: "assets/templates/春夏秋冬/春限定のアクセサリープロモーション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
   summer: { label: "夏限定", image: "assets/templates/春夏秋冬/夏限定ジュエリーデザイン.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
   autumn: { label: "秋限定", image: "assets/templates/春夏秋冬/秋限定アクセサリーの魅力.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
-  winter: { label: "冬限定", image: "assets/templates/春夏秋冬/冬限定アクセサリーコレクション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 }
+  winter: { label: "冬限定", image: "assets/templates/春夏秋冬/冬限定アクセサリーコレクション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  pencilLimited: { label: "数量限定", image: "assets/templates/その他テンプレート/数量限定アクセサリーPOP.png", role: "attention", baseWidth: 1152, baseHeight: 1536 },
+  pencilHandmade: { label: "手作りです", image: "assets/templates/その他テンプレート/手作りですアクセサリーPOP.png", role: "beside", baseWidth: 1152, baseHeight: 1536 },
+  pencilBundle: { label: "まとめ買い", image: "assets/templates/その他テンプレート/まとめ買いアクセサリーPOP.png", role: "sale", baseWidth: 1152, baseHeight: 1536, pricePrefix: "2つで" }
 };
 var FIXED_TEMPLATE_GROUPS = [
   { title: "定番テンプレ", items: ["popular", "fresh", "bargain"] },
   { title: "文字テンプレ", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
-  { title: "季節テンプレ", items: ["spring", "summer", "autumn", "winter"] }
+  { title: "季節テンプレ", items: ["spring", "summer", "autumn", "winter"] },
+  { title: "その他テンプレ", items: ["pencilLimited", "pencilHandmade", "pencilBundle"] }
 ];
 var ROLE_DEFAULT_FIXED_TEMPLATE = {
   attention: "popular",
@@ -955,11 +959,15 @@ function getTemplateScalePreset(templateName) {
   };
 }
 
-function getFixedTemplatePriceText(roleName, priceText) {
+function getFixedTemplatePriceText(templateConfig, roleName, priceText) {
   var value = trimText(priceText);
 
   if (!value) {
     return "300円";
+  }
+
+  if (templateConfig && templateConfig.pricePrefix) {
+    return templateConfig.pricePrefix + "\n" + value;
   }
 
   return value || "300円";
@@ -999,7 +1007,7 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   artboard.appendChild(image);
 
   overlay = createElement("div", "fixed-overlay");
-  priceText = getFixedTemplatePriceText(data.role, data.price);
+  priceText = getFixedTemplatePriceText(templateConfig, data.role, data.price);
   price = createElement("p", "fixed-price fixed-price-" + data.role, priceText);
   overlay.appendChild(price);
   artboard.appendChild(overlay);
@@ -1170,6 +1178,7 @@ function applyScreenSurfaceSizing(surface, orientation) {
   var artboardWidth;
   var artboardHeight;
   var fixedPrice;
+  var isPencilTemplate;
   var preset;
   var inner;
   var top;
@@ -1191,14 +1200,15 @@ function applyScreenSurfaceSizing(surface, orientation) {
   if (hasClass(surface, "pop-fixed-surface")) {
     fixedTemplateId = surface.getAttribute("data-fixed-template") || "";
     fixedConfig = FIXED_TEMPLATE_OPTIONS[fixedTemplateId] || null;
+    isPencilTemplate = fixedTemplateId.indexOf("pencil") === 0;
     artRatio = fixedConfig ? (fixedConfig.baseWidth / fixedConfig.baseHeight) : FIXED_ART_RATIO;
     fixedStage = surface.getElementsByClassName("fixed-stage")[0];
     fixedArtboard = surface.getElementsByClassName("fixed-artboard")[0];
     fixedPrice = surface.getElementsByClassName("fixed-price")[0];
 
     if (fixedStage) {
-      stageWidth = surface.clientWidth * 0.965;
-      stageHeight = surface.clientHeight * 0.985;
+      stageWidth = surface.clientWidth * (isPencilTemplate ? 0.982 : 0.965);
+      stageHeight = surface.clientHeight * (isPencilTemplate ? 0.992 : 0.985);
       fixedStage.style.width = Math.round(stageWidth) + "px";
       fixedStage.style.height = Math.round(stageHeight) + "px";
       fixedStage.style.left = Math.round((surface.clientWidth - stageWidth) / 2) + "px";
@@ -1206,8 +1216,8 @@ function applyScreenSurfaceSizing(surface, orientation) {
     }
 
     if (fixedArtboard) {
-      availableWidth = stageWidth * 0.93;
-      availableHeight = stageHeight * 0.975;
+      availableWidth = stageWidth * (isPencilTemplate ? 0.97 : 0.93);
+      availableHeight = stageHeight * (isPencilTemplate ? 0.99 : 0.975);
       artboardHeight = availableHeight;
       artboardWidth = artboardHeight * artRatio;
 
@@ -1233,6 +1243,10 @@ function applyScreenSurfaceSizing(surface, orientation) {
         fixedPrice.style.fontSize = Math.max(26, Math.round(58 * scale)) + "px";
       } else if (hasClass(surface, "fixed-template-figmaBeside")) {
         fixedPrice.style.fontSize = Math.max(28, Math.round(62 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-template-pencilBundle")) {
+        fixedPrice.style.fontSize = Math.max(28, Math.round(98 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-template-pencilLimited") || hasClass(surface, "fixed-template-pencilHandmade")) {
+        fixedPrice.style.fontSize = Math.max(28, Math.round(94 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-sale")) {
         fixedPrice.style.fontSize = Math.max(40, Math.round(112 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-beside")) {
