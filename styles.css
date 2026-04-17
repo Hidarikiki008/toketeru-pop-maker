@@ -911,14 +911,14 @@ button:focus {
 .fixed-price {
   position: absolute;
   margin: 0;
-  width: 58%;
+  width: 66%;
   font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
   font-weight: 900;
   white-space: nowrap;
   letter-spacing: 0.01em;
   line-height: 1;
   text-align: center;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
 .fixed-role-attention .fixed-price {
@@ -948,7 +948,7 @@ button:focus {
 .fixed-template-figmaAttention .fixed-price {
   top: 74.6%;
   left: 50%;
-  width: 56%;
+  width: 60%;
   color: #8a663d;
   transform: translate(-50%, -50%);
 }
@@ -956,7 +956,7 @@ button:focus {
 .fixed-template-figmaBeside .fixed-price {
   top: 63.4%;
   left: 50%;
-  width: 58%;
+  width: 62%;
   color: #8a663d;
   transform: translate(-50%, -50%);
 }
@@ -964,7 +964,7 @@ button:focus {
 .fixed-template-figmaSale .fixed-price {
   top: 69.8%;
   left: 50%;
-  width: 34%;
+  width: 38%;
   color: #db6278;
   font-weight: 900;
   letter-spacing: 0;

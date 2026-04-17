@@ -1228,17 +1228,17 @@ function applyScreenSurfaceSizing(surface, orientation) {
 
     if (fixedPrice) {
       if (hasClass(surface, "fixed-template-figmaSale")) {
-        fixedPrice.style.fontSize = Math.max(30, Math.round(72 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(32, Math.round(76 * scale)) + "px";
       } else if (hasClass(surface, "fixed-template-figmaAttention")) {
-        fixedPrice.style.fontSize = Math.max(24, Math.round(54 * scale)) + "px";
-      } else if (hasClass(surface, "fixed-template-figmaBeside")) {
         fixedPrice.style.fontSize = Math.max(26, Math.round(58 * scale)) + "px";
+      } else if (hasClass(surface, "fixed-template-figmaBeside")) {
+        fixedPrice.style.fontSize = Math.max(28, Math.round(62 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-sale")) {
-        fixedPrice.style.fontSize = Math.max(34, Math.round(98 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(40, Math.round(112 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-beside")) {
-        fixedPrice.style.fontSize = Math.max(28, Math.round(74 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(34, Math.round(88 * scale)) + "px";
       } else {
-        fixedPrice.style.fontSize = Math.max(28, Math.round(76 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(34, Math.round(90 * scale)) + "px";
       }
     }
 
