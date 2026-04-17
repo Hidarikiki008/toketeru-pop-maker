@@ -193,6 +193,7 @@ function setupTemplateModeUI() {
   var templateRow;
   var templateCard;
   var templateButton;
+  var templateThumbWrap;
   var templateThumb;
   var templateName;
   var templateMeta;
@@ -283,15 +284,17 @@ function setupTemplateModeUI() {
       templateButton.type = "button";
       templateButton.setAttribute("data-fixed-template", templateId);
       templateButton.setAttribute("aria-pressed", "false");
+      templateThumbWrap = createElement("span", "fixed-template-thumb-wrap");
       templateThumb = document.createElement("img");
       templateThumb.className = "fixed-template-thumb";
       templateThumb.src = FIXED_TEMPLATE_OPTIONS[templateId].image;
       templateThumb.alt = FIXED_TEMPLATE_OPTIONS[templateId].label;
       templateName = createElement("span", "fixed-template-button-label", FIXED_TEMPLATE_OPTIONS[templateId].label);
-      templateMeta = createElement("span", "fixed-template-button-meta", ROLE_MAP[FIXED_TEMPLATE_OPTIONS[templateId].role].tipLabel);
-      templateButton.appendChild(templateThumb);
+      templateMeta = createElement("span", "fixed-template-button-meta fixed-template-button-meta-" + FIXED_TEMPLATE_OPTIONS[templateId].role, ROLE_MAP[FIXED_TEMPLATE_OPTIONS[templateId].role].tipLabel);
+      templateThumbWrap.appendChild(templateThumb);
+      templateThumbWrap.appendChild(templateMeta);
+      templateButton.appendChild(templateThumbWrap);
       templateButton.appendChild(templateName);
-      templateButton.appendChild(templateMeta);
       templateCard.appendChild(templateButton);
       fixedTemplateButtons.push(templateButton);
 
