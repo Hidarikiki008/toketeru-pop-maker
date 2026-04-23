@@ -1716,17 +1716,30 @@ function bindColorButtons() {
 
 function bindPriceMotionButtons() {
   var i;
+  var handleActivate = function (button, event) {
+    if (!button) {
+      return;
+    }
+
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+
+    setPriceMotion(button.getAttribute("data-price-motion"));
+    renderAll();
+  };
 
   for (i = 0; i < priceMotionButtons.length; i += 1) {
     priceMotionButtons[i].addEventListener("click", function (event) {
       var button = findTargetWithAttribute(event.target || event.srcElement, "data-price-motion", this);
 
-      if (!button) {
-        return;
-      }
+      handleActivate(button, event);
+    });
 
-      setPriceMotion(button.getAttribute("data-price-motion"));
-      renderAll();
+    priceMotionButtons[i].addEventListener("touchend", function (event) {
+      var button = findTargetWithAttribute(event.target || event.srcElement, "data-price-motion", this);
+
+      handleActivate(button, event);
     });
   }
 }
