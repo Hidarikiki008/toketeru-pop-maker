@@ -78,6 +78,7 @@ var DEFAULT_FORM = {
   comment: "手作りクッキー🍪",
   description: "サクサクこうばしい人気味☀️",
   price: "1500円",
+  priceMotion: "none",
   role: "beside",
   color: "orange",
   copies: "4",
@@ -87,25 +88,25 @@ var DEFAULT_FORM = {
 
 var FIXED_ART_RATIO = 576 / 1024;
 var FIXED_TEMPLATE_OPTIONS = {
-  popular: { label: "人気商品", image: "assets/templates/基本/人気商品と手作りアクセサリー.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
-  fresh: { label: "新商品", image: "assets/templates/基本/新しいアクセサリーコレクションの紹介.png", role: "beside", baseWidth: 1024, baseHeight: 1536 },
-  bargain: { label: "お買い得", image: "assets/templates/基本/お得なアクセサリーキャンペーン.png", role: "sale", baseWidth: 1024, baseHeight: 1536 },
+  popular: { label: "人気商品", image: "assets/templates/基本/ChatGPT Image 人気商品.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
+  fresh: { label: "新商品", image: "assets/templates/基本/ChatGPT Image 新商品.png", role: "beside", baseWidth: 1086, baseHeight: 1448 },
+  bargain: { label: "お買い得", image: "assets/templates/基本/ChatGPT Image お買い得.png", role: "sale", baseWidth: 1086, baseHeight: 1448 },
   figmaAttention: { label: "テンプレA 遠く用", image: "assets/templates/文字テンプレート/テンプレA_遠くで止める.png", role: "attention", baseWidth: 720, baseHeight: 960 },
   figmaBeside: { label: "テンプレB 商品横", image: "assets/templates/文字テンプレート/テンプレB_商品の横で伝える.png", role: "beside", baseWidth: 720, baseHeight: 960 },
   figmaSale: { label: "テンプレC セール", image: "assets/templates/文字テンプレート/テンプレC_セールで押す.png", role: "sale", baseWidth: 720, baseHeight: 960 },
-  spring: { label: "春限定", image: "assets/templates/春夏秋冬/春限定のアクセサリープロモーション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
-  summer: { label: "夏限定", image: "assets/templates/春夏秋冬/夏限定ジュエリーデザイン.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
-  autumn: { label: "秋限定", image: "assets/templates/春夏秋冬/秋限定アクセサリーの魅力.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
-  winter: { label: "冬限定", image: "assets/templates/春夏秋冬/冬限定アクセサリーコレクション.png", role: "attention", baseWidth: 1024, baseHeight: 1536 },
+  spring: { label: "春限定", image: "assets/templates/春夏秋冬/ChatGPT Image 春.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
+  summer: { label: "夏限定", image: "assets/templates/春夏秋冬/ChatGPT Image 夏.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
+  autumn: { label: "秋限定", image: "assets/templates/春夏秋冬/ChatGPT Image 秋.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
+  winter: { label: "冬限定", image: "assets/templates/春夏秋冬/ChatGPT Image 冬.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
   pencilLimited: { label: "数量限定", image: "assets/templates/その他テンプレート/数量限定アクセサリーPOP.png", role: "attention", baseWidth: 1152, baseHeight: 1536 },
   pencilHandmade: { label: "手作りです", image: "assets/templates/その他テンプレート/手作りですアクセサリーPOP.png", role: "beside", baseWidth: 1152, baseHeight: 1536 },
   pencilBundle: { label: "まとめ買い", image: "assets/templates/その他テンプレート/まとめ買いアクセサリーPOP.png", role: "sale", baseWidth: 1152, baseHeight: 1536, pricePrefix: "2つで" }
 };
 var FIXED_TEMPLATE_GROUPS = [
-  { title: "定番テンプレ", items: ["popular", "fresh", "bargain"] },
-  { title: "文字テンプレ", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
-  { title: "季節テンプレ", items: ["spring", "summer", "autumn", "winter"] },
-  { title: "その他テンプレ", items: ["pencilLimited", "pencilHandmade", "pencilBundle"] }
+  { title: "定番テンプレ", note: "人気・新商品・お買い得", items: ["popular", "fresh", "bargain"] },
+  { title: "文字テンプレ", note: "やさしい文字入りのPOP", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
+  { title: "季節テンプレ", note: "春夏秋冬のおすすめ", items: ["spring", "summer", "autumn", "winter"] },
+  { title: "その他テンプレ", note: "手作り・限定・まとめ買い", items: ["pencilLimited", "pencilHandmade", "pencilBundle"] }
 ];
 var ROLE_DEFAULT_FIXED_TEMPLATE = {
   attention: "popular",
@@ -125,12 +126,14 @@ var titleInput = document.getElementById("titleInput");
 var commentInput = document.getElementById("commentInput");
 var descriptionInput = document.getElementById("descriptionInput");
 var priceInput = document.getElementById("priceInput");
+var priceMotionSelect = document.getElementById("priceMotionSelect");
+var priceMotionButtons = document.querySelectorAll("[data-price-motion]");
 var colorSelect = document.getElementById("colorSelect");
 var colorGrid = document.getElementById("colorGrid");
 var colorButtons = document.querySelectorAll("[data-color]");
 var copiesSelect = document.getElementById("copiesSelect");
-var updateButton = document.getElementById("updateButton");
 var openDisplayButton = document.getElementById("openDisplayButton");
+var displayActionHint = document.getElementById("displayActionHint");
 var printButton = document.getElementById("printButton");
 var resetButton = document.getElementById("resetButton");
 var roleButtons = document.querySelectorAll("[data-role]");
@@ -190,6 +193,7 @@ function setupTemplateModeUI() {
   var templateLabel;
   var templateGroup;
   var templateGroupTitle;
+  var templateGroupNote;
   var templateRow;
   var templateCard;
   var templateButton;
@@ -273,6 +277,10 @@ function setupTemplateModeUI() {
     groupConfig = FIXED_TEMPLATE_GROUPS[groupIndex];
     templateGroup = createElement("div", "fixed-template-group");
     templateGroupTitle = createElement("p", "fixed-template-group-title", groupConfig.title);
+    if (groupConfig.note) {
+      templateGroupNote = createElement("span", "fixed-template-group-note", groupConfig.note);
+      templateGroupTitle.appendChild(templateGroupNote);
+    }
     templateRow = createElement("div", "fixed-template-grid");
     templateGroup.appendChild(templateGroupTitle);
     templateGroup.appendChild(templateRow);
@@ -321,7 +329,7 @@ function setupTemplateModeUI() {
   slideshowToggle = document.createElement("input");
   slideshowToggle.type = "checkbox";
   slideshowToggle.id = "slideshowToggle";
-  slideText = createElement("span", "slideshow-card-text", "紙芝居で順番に見せる");
+  slideText = createElement("span", "slideshow-card-text", "大きく表示で紙芝居を再生する");
   slideInner.appendChild(slideshowToggle);
   slideInner.appendChild(slideText);
   slideField.appendChild(slideLabel);
@@ -432,6 +440,9 @@ function setDefaults() {
   commentInput.value = DEFAULT_FORM.comment;
   descriptionInput.value = DEFAULT_FORM.description;
   priceInput.value = DEFAULT_FORM.price;
+  if (priceMotionSelect) {
+    setPriceMotion(DEFAULT_FORM.priceMotion);
+  }
   if (fixedPriceInput) {
     fixedPriceInput.value = DEFAULT_FORM.price;
   }
@@ -628,6 +639,8 @@ function setTemplateMode(modeName) {
   } else {
     stopSlideshow();
   }
+
+  updateOpenDisplayButton();
 }
 
 function syncRoleGuide() {
@@ -650,6 +663,26 @@ function syncRoleGuide() {
 
 function syncColorHint() {
   toneHint.textContent = COLOR_HINT_MAP[colorSelect.value] || "";
+}
+
+function setPriceMotion(motionName) {
+  var i;
+
+  if (!priceMotionSelect) {
+    return;
+  }
+
+  priceMotionSelect.value = motionName;
+
+  for (i = 0; i < priceMotionButtons.length; i += 1) {
+    if (priceMotionButtons[i].getAttribute("data-price-motion") === motionName) {
+      priceMotionButtons[i].className = "motion-card is-active";
+      priceMotionButtons[i].setAttribute("aria-pressed", "true");
+    } else {
+      priceMotionButtons[i].className = "motion-card";
+      priceMotionButtons[i].setAttribute("aria-pressed", "false");
+    }
+  }
 }
 
 function setColor(colorName) {
@@ -768,6 +801,7 @@ function getFormData() {
     comment: commentInput.value,
     description: descriptionInput.value,
     price: activePrice,
+    priceMotion: priceMotionSelect ? priceMotionSelect.value : DEFAULT_FORM.priceMotion,
     role: roleName,
     template: role.template,
     templateMode: templateMode,
@@ -988,6 +1022,9 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   var templateConfig = FIXED_TEMPLATE_OPTIONS[data.fixedTemplate] || FIXED_TEMPLATE_OPTIONS.fresh;
 
   outer.className += " surface-" + variant + " fixed-role-" + templateConfig.role + " fixed-template-" + data.fixedTemplate;
+  if (variant !== "print") {
+    outer.className += " price-motion-" + (data.priceMotion || "none");
+  }
 
   if (isEmptySlot) {
     outer.className += " is-empty-slot";
@@ -1041,6 +1078,9 @@ function buildPopSurface(data, variant, isEmptySlot) {
   var ribbon;
 
   outer.className = "pop-surface surface-" + variant + " " + data.template + " theme-" + data.color;
+  if (variant !== "print") {
+    outer.className += " price-motion-" + (data.priceMotion || "none");
+  }
 
   if (isEmptySlot) {
     outer.className += " is-empty-slot";
@@ -1241,21 +1281,31 @@ function applyScreenSurfaceSizing(surface, orientation) {
 
     if (fixedPrice) {
       if (hasClass(surface, "fixed-template-figmaSale")) {
-        fixedPrice.style.fontSize = Math.max(32, Math.round(76 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(34, Math.round(82 * scale)) + "px";
       } else if (hasClass(surface, "fixed-template-figmaAttention")) {
-        fixedPrice.style.fontSize = Math.max(26, Math.round(58 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(28, Math.round(63 * scale)) + "px";
       } else if (hasClass(surface, "fixed-template-figmaBeside")) {
-        fixedPrice.style.fontSize = Math.max(28, Math.round(62 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(30, Math.round(68 * scale)) + "px";
+      } else if (
+        hasClass(surface, "fixed-template-popular") ||
+        hasClass(surface, "fixed-template-fresh") ||
+        hasClass(surface, "fixed-template-bargain") ||
+        hasClass(surface, "fixed-template-spring") ||
+        hasClass(surface, "fixed-template-summer") ||
+        hasClass(surface, "fixed-template-autumn") ||
+        hasClass(surface, "fixed-template-winter")
+      ) {
+        fixedPrice.style.fontSize = Math.max(46, Math.round(132 * scale)) + "px";
       } else if (hasClass(surface, "fixed-template-pencilBundle")) {
-        fixedPrice.style.fontSize = Math.max(28, Math.round(98 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(30, Math.round(106 * scale)) + "px";
       } else if (hasClass(surface, "fixed-template-pencilLimited") || hasClass(surface, "fixed-template-pencilHandmade")) {
-        fixedPrice.style.fontSize = Math.max(28, Math.round(94 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(30, Math.round(102 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-sale")) {
-        fixedPrice.style.fontSize = Math.max(40, Math.round(112 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(42, Math.round(120 * scale)) + "px";
       } else if (hasClass(surface, "fixed-role-beside")) {
-        fixedPrice.style.fontSize = Math.max(34, Math.round(88 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(36, Math.round(96 * scale)) + "px";
       } else {
-        fixedPrice.style.fontSize = Math.max(34, Math.round(90 * scale)) + "px";
+        fixedPrice.style.fontSize = Math.max(36, Math.round(98 * scale)) + "px";
       }
     }
 
@@ -1490,7 +1540,36 @@ function updateDisplaySlideButton() {
     return;
   }
 
-  displaySlideButton.textContent = isSlideshowActive() ? "紙芝居を止める" : "紙芝居で見る";
+  displaySlideButton.textContent = isSlideshowActive() ? "紙芝居を止める" : "紙芝居を再生";
+}
+
+function updateOpenDisplayButton() {
+  var isFixedMode;
+  var hasSlideshowSelection;
+
+  if (!openDisplayButton) {
+    return;
+  }
+
+  isFixedMode = getTemplateMode() === "fixed";
+  hasSlideshowSelection = !!(slideshowToggle && slideshowToggle.checked && getSelectedSlideshowTemplateIds().length);
+
+  if (isFixedMode && hasSlideshowSelection) {
+    openDisplayButton.textContent = "再生";
+    if (displayActionHint) {
+      displayActionHint.textContent = "選んだテンプレだけ、順番に再生するよ。";
+    }
+  } else if (isFixedMode && slideshowToggle && slideshowToggle.checked) {
+    openDisplayButton.textContent = "再生";
+    if (displayActionHint) {
+      displayActionHint.textContent = "紙芝居に入れるテンプレを選ぶと、ここから再生できるよ。";
+    }
+  } else {
+    openDisplayButton.textContent = "再生";
+    if (displayActionHint) {
+      displayActionHint.textContent = "POPを大きく表示して見せるよ。";
+    }
+  }
 }
 
 function stopSlideshow() {
@@ -1542,6 +1621,7 @@ function syncSlideshowState() {
   var selectedId;
 
   updateDisplaySlideButton();
+  updateOpenDisplayButton();
 
   if (!isSlideshowActive()) {
     stopSlideshow();
@@ -1563,8 +1643,6 @@ function syncSlideshowState() {
   renderSlideshowFrame(data);
   scheduleSlideshowFrame(data);
 }
-
-updateButton.addEventListener("click", renderAll);
 
 openDisplayButton.addEventListener("click", openDisplayMode);
 
@@ -1634,6 +1712,23 @@ function bindColorButtons() {
     setColor(target.getAttribute("data-color"));
     renderAll();
   });
+}
+
+function bindPriceMotionButtons() {
+  var i;
+
+  for (i = 0; i < priceMotionButtons.length; i += 1) {
+    priceMotionButtons[i].addEventListener("click", function (event) {
+      var button = findTargetWithAttribute(event.target || event.srcElement, "data-price-motion", this);
+
+      if (!button) {
+        return;
+      }
+
+      setPriceMotion(button.getAttribute("data-price-motion"));
+      renderAll();
+    });
+  }
 }
 
 function bindPreviewButtons() {
@@ -1711,6 +1806,9 @@ titleInput.addEventListener("input", renderAll);
 commentInput.addEventListener("input", renderAll);
 descriptionInput.addEventListener("input", renderAll);
 priceInput.addEventListener("input", renderAll);
+if (priceMotionSelect) {
+  priceMotionSelect.addEventListener("change", renderAll);
+}
 if (fixedPriceInput) {
   fixedPriceInput.addEventListener("input", renderAll);
 }
@@ -1735,6 +1833,7 @@ copiesSelect.addEventListener("change", renderAll);
 
 bindRoleButtons();
 bindColorButtons();
+bindPriceMotionButtons();
 bindOrientationButtons();
 bindPreviewButtons();
 bindPresetButtons();
