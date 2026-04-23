@@ -93,20 +93,20 @@ var FIXED_TEMPLATE_OPTIONS = {
   bargain: { label: "お買い得", image: "assets/templates/基本/ChatGPT Image お買い得.png", role: "sale", baseWidth: 1086, baseHeight: 1448 },
   figmaAttention: { label: "テンプレA 遠く用", image: "assets/templates/文字テンプレート/テンプレA_遠くで止める.png", role: "attention", baseWidth: 720, baseHeight: 960 },
   figmaBeside: { label: "テンプレB 商品横", image: "assets/templates/文字テンプレート/テンプレB_商品の横で伝える.png", role: "beside", baseWidth: 720, baseHeight: 960 },
-  figmaSale: { label: "テンプレC セール", image: "assets/templates/文字テンプレート/テンプレC_セールで押す.png", role: "sale", baseWidth: 720, baseHeight: 960 },
+  figmaSale: { label: "テンプレC 2つでまとめ買い", image: "assets/templates/文字テンプレート/テンプレC_セールで押す.png", role: "sale", baseWidth: 720, baseHeight: 960 },
   spring: { label: "春限定", image: "assets/templates/春夏秋冬/ChatGPT Image 春.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
   summer: { label: "夏限定", image: "assets/templates/春夏秋冬/ChatGPT Image 夏.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
   autumn: { label: "秋限定", image: "assets/templates/春夏秋冬/ChatGPT Image 秋.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
   winter: { label: "冬限定", image: "assets/templates/春夏秋冬/ChatGPT Image 冬.png", role: "attention", baseWidth: 1086, baseHeight: 1448 },
   pencilLimited: { label: "数量限定", image: "assets/templates/その他テンプレート/数量限定アクセサリーPOP.png", role: "attention", baseWidth: 1152, baseHeight: 1536 },
   pencilHandmade: { label: "手作りです", image: "assets/templates/その他テンプレート/手作りですアクセサリーPOP.png", role: "beside", baseWidth: 1152, baseHeight: 1536 },
-  pencilBundle: { label: "まとめ買い", image: "assets/templates/その他テンプレート/まとめ買いアクセサリーPOP.png", role: "sale", baseWidth: 1152, baseHeight: 1536, pricePrefix: "2つで" }
+  pencilBundle: { label: "2つでまとめ買い", image: "assets/templates/その他テンプレート/まとめ買いアクセサリーPOP.png", role: "sale", baseWidth: 1152, baseHeight: 1536, pricePrefix: "2つで" }
 };
 var FIXED_TEMPLATE_GROUPS = [
   { title: "定番テンプレ", note: "人気・新商品・お買い得", items: ["popular", "fresh", "bargain"] },
-  { title: "文字テンプレ", note: "やさしい文字入りのPOP", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
+  { title: "文字テンプレ", note: "やさしい文字入りとまとめ買い", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
   { title: "季節テンプレ", note: "春夏秋冬のおすすめ", items: ["spring", "summer", "autumn", "winter"] },
-  { title: "その他テンプレ", note: "手作り・限定・まとめ買い", items: ["pencilLimited", "pencilHandmade", "pencilBundle"] }
+  { title: "その他テンプレ", note: "手作り・限定・2つでまとめ買い", items: ["pencilLimited", "pencilHandmade", "pencilBundle"] }
 ];
 var ROLE_DEFAULT_FIXED_TEMPLATE = {
   attention: "popular",
@@ -1018,6 +1018,7 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
   var image;
   var overlay;
   var price;
+  var priceInner;
   var priceText;
   var templateConfig = FIXED_TEMPLATE_OPTIONS[data.fixedTemplate] || FIXED_TEMPLATE_OPTIONS.fresh;
 
@@ -1048,7 +1049,9 @@ function buildFixedTemplateSurface(data, variant, isEmptySlot) {
 
   overlay = createElement("div", "fixed-overlay");
   priceText = getFixedTemplatePriceText(templateConfig, data.role, data.price);
-  price = createElement("p", "fixed-price fixed-price-" + data.role, priceText);
+  price = createElement("p", "fixed-price fixed-price-" + data.role);
+  priceInner = createElement("span", "fixed-price__text", priceText);
+  price.appendChild(priceInner);
   overlay.appendChild(price);
   artboard.appendChild(overlay);
   stage.appendChild(artboard);

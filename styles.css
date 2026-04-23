@@ -1015,9 +1015,14 @@ button:focus {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
-.price-motion-float .fixed-price {
-  -webkit-animation: price-float 2.8s ease-in-out infinite;
-  animation: price-float 2.8s ease-in-out infinite;
+.fixed-price__text {
+  display: inline-block;
+  white-space: inherit;
+}
+
+.price-motion-float .fixed-price__text {
+  -webkit-animation: price-float-fixed 2.8s ease-in-out infinite;
+  animation: price-float-fixed 2.8s ease-in-out infinite;
 }
 
 .price-motion-float .pop-price {
@@ -1025,9 +1030,9 @@ button:focus {
   animation: price-float-inline 2.8s ease-in-out infinite;
 }
 
-.price-motion-pop .fixed-price {
-  -webkit-animation: price-pop 2.2s ease-in-out infinite;
-  animation: price-pop 2.2s ease-in-out infinite;
+.price-motion-pop .fixed-price__text {
+  -webkit-animation: price-pop-fixed 2.2s ease-in-out infinite;
+  animation: price-pop-fixed 2.2s ease-in-out infinite;
 }
 
 .price-motion-pop .pop-price {
@@ -1041,14 +1046,14 @@ button:focus {
   animation: price-glow 2.6s ease-in-out infinite;
 }
 
-@-webkit-keyframes price-float {
-  0%, 100% { -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); }
-  50% { -webkit-transform: translate(-50%, -62%); transform: translate(-50%, -62%); }
+@-webkit-keyframes price-float-fixed {
+  0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
+  50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); }
 }
 
-@keyframes price-float {
-  0%, 100% { -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); }
-  50% { -webkit-transform: translate(-50%, -62%); transform: translate(-50%, -62%); }
+@keyframes price-float-fixed {
+  0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
+  50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); }
 }
 
 @-webkit-keyframes price-float-inline {
@@ -1061,18 +1066,18 @@ button:focus {
   50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); }
 }
 
-@-webkit-keyframes price-pop {
-  0%, 100% { -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); }
-  18% { -webkit-transform: translate(-50%, -50%) scale(1.08); transform: translate(-50%, -50%) scale(1.08); }
-  34% { -webkit-transform: translate(-50%, -50%) scale(0.98); transform: translate(-50%, -50%) scale(0.98); }
-  48% { -webkit-transform: translate(-50%, -50%) scale(1.03); transform: translate(-50%, -50%) scale(1.03); }
+@-webkit-keyframes price-pop-fixed {
+  0%, 100% { -webkit-transform: scale(1); transform: scale(1); }
+  18% { -webkit-transform: scale(1.08); transform: scale(1.08); }
+  34% { -webkit-transform: scale(0.98); transform: scale(0.98); }
+  48% { -webkit-transform: scale(1.03); transform: scale(1.03); }
 }
 
-@keyframes price-pop {
-  0%, 100% { -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); }
-  18% { -webkit-transform: translate(-50%, -50%) scale(1.08); transform: translate(-50%, -50%) scale(1.08); }
-  34% { -webkit-transform: translate(-50%, -50%) scale(0.98); transform: translate(-50%, -50%) scale(0.98); }
-  48% { -webkit-transform: translate(-50%, -50%) scale(1.03); transform: translate(-50%, -50%) scale(1.03); }
+@keyframes price-pop-fixed {
+  0%, 100% { -webkit-transform: scale(1); transform: scale(1); }
+  18% { -webkit-transform: scale(1.08); transform: scale(1.08); }
+  34% { -webkit-transform: scale(0.98); transform: scale(0.98); }
+  48% { -webkit-transform: scale(1.03); transform: scale(1.03); }
 }
 
 @-webkit-keyframes price-pop-inline {
