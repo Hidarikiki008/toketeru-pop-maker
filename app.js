@@ -104,9 +104,9 @@ var FIXED_TEMPLATE_OPTIONS = {
 };
 var FIXED_TEMPLATE_GROUPS = [
   { title: "定番テンプレ", note: "人気・新商品・お買い得", items: ["popular", "fresh", "bargain"] },
-  { title: "文字テンプレ", note: "やさしい文字入りとまとめ買い", items: ["figmaAttention", "figmaBeside", "figmaSale"] },
+  { title: "文字テンプレ", note: "やさしい文字入りのPOP", items: ["figmaAttention", "figmaBeside"] },
   { title: "季節テンプレ", note: "春夏秋冬のおすすめ", items: ["spring", "summer", "autumn", "winter"] },
-  { title: "その他テンプレ", note: "手作り・限定・2つでまとめ買い", items: ["pencilLimited", "pencilHandmade", "pencilBundle"] }
+  { title: "その他テンプレ", note: "手作り・限定のPOP", items: ["pencilLimited", "pencilHandmade"] }
 ];
 var ROLE_DEFAULT_FIXED_TEMPLATE = {
   attention: "popular",
