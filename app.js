@@ -77,7 +77,7 @@ var DEFAULT_FORM = {
   title: "人気商品🐱",
   comment: "手作りクッキー🍪",
   description: "サクサクこうばしい人気味☀️",
-  price: "1500円",
+  price: "500円",
   priceMotion: "none",
   role: "beside",
   color: "orange",
